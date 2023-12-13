@@ -376,5 +376,5 @@ FodyWeavers.xsd
 *.xml
 /RunSlingServer/Assets/RunSlingServerGrey.ico
 /RunSlingServer/config_org.ini
+/RunSlingServer/config.ini
 /RunSlingServer/*.ini
-/RunSlingServer/config_org.ini
