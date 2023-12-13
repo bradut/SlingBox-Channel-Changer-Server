@@ -1,0 +1,214 @@
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="shortcut icon" href="#"> <!--  avoid favicon error-->
+    <title>Remote Digital</title>
+
+    <style>
+        body {
+            background-color: #d9d9d9;
+            max-width: 100vw;
+            margin: 8px;
+            font-family: Tahoma, monospace;
+            overflow-wrap: break-word;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 16px); /* Subtract top and bottom margins */
+            min-width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .button {
+            border: 1px solid #595959;
+            background-color: #595959;
+            color: white;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            font-size: 20px;
+            min-width: 100px;
+            border-radius: 5px;
+        }
+
+        .emptyButton {
+            background-color: #d9d9d9;
+            color: #d9d9d9;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            font-size: 20px;
+            min-width: 80px;
+            height: 1px !important;
+        }
+
+        .round {
+            border: 1px solid #595959;
+            background-color: green;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+
+        .text {
+            border: 1px solid #595959;
+            color: black;
+            background-color: lightblue;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .tvGuideButton {
+            /* font-family: Tahoma, monospace;*/
+            font-size: 35px !important;
+            color: white;
+            text-decoration: none;
+            font-style: normal;
+            font-weight: 400;
+            display: block;
+            /* width: 100%;*/
+            text-align: center;
+            background-color: #595959;
+            padding: 10px 0;
+            border: 1px solid #595959;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form id="mainForm" method="post" action="/Remote/sling_0">
+
+        <!--DO NOT MODIFY THE ID-->
+
+        <div style="text-align: center;">
+        <!--
+        <div>
+            <button class="round" type="submit" name="1" value="9">1</button>
+            <button class="round" type="submit" name="2" value="10">2</button>
+            <button class="round" type="submit" name="3" value="11">3</button>
+            <button class="round" type="submit" name="4" value="12">4</button>
+            <button class="round" type="submit" name="5" value="13">5</button>
+            <button class="round" type="submit" name="6" value="14">6</button>
+            <button class="round" type="submit" name="7" value="15">7</button>
+            <button class="round" type="submit" name="8" value="16">8</button>
+            <button class="round" type="submit" name="9" value="17">9</button>
+            <button class="round" type="submit" name="0" value="18">0</button>
+        </div>
+        -->
+            <div>
+                <button class="button" type="submit" name="Up" value="38">&#9650;</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Left" value="40">&#9668;</button>
+                <button class="button" style="border-radius: 25%; color: cyan;" type="submit" name="OK" value="42">OK</button>
+                <button class="button" type="submit" name="Right" value="41">&#9658;</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Down" value="39">&#9660;</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Exit" value="37">Exit</button>
+                <button class="button" type="submit" name="Last" value="56">Last</button>
+                <button class="button" type="submit" name="Guide" value="35">Guide</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Pg+" value="44">Pg+</button>
+                <button class="button" type="submit" name="Menu" value="33">Menu</button>
+                <button class="button" type="submit" name="Ch+" value="4">Ch+</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Pg-" value="43">Pg-</button>
+                <span class="emptyButton"></span>
+                <button class="button" type="submit" name="Ch-" value="5">Ch-</button>
+            </div>
+            <div>
+                <span class="emptyButton"></span>
+            </div>
+            <div>
+                <button class="button" style="color: red;" type="submit" name="Rec" value="29">Rec</button>
+                <span class="emptyButton"></span>
+                <button class="button" type="submit" name="DVR" value="23">DVR</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Rew" value="27">&#9664;&#9664;</button>
+                <button class="button" type="submit" name="Play" value="24">Play</button>
+                <button class="button" type="submit" name="FF" value="28">&#9654;&#9654;</button>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Day+" value="60">Day+</button>
+                <button class="button" type="submit" name="Pause" value="26">&#9612;&#9612;</button>
+                <button class="button" type="submit" name="OnDemand" value="34">OnDmd</button>
+            </div>
+
+            <div>
+                <button class="button" type="submit" name="Day-" value="59">Day-</button>
+                <button class="button" type="submit" name="Power" value="1">Power</button>
+                <button class="button" style="color: red;" type="submit" name="Restart" value="-1">Restart</button>
+            </div>
+            <div>
+                <span class="emptyButton"></span>
+
+                <!--DO NOT REMOVE: Uncomment to display Debug Info-->
+                <!--<div id ="displayDebugInfoHere"></div>-->
+
+                <div id="slingStatus" style="color: Transparent; font-size: 1px">
+                    <!--DO NOT REMOVE: MAGIC string replaced by Slinger with server status.-->
+                    <label>Status:</label>Status:%s
+                </div>
+            </div>
+            <div>
+                <button class="button" type="submit" name="Channel" value="Channel">Channel</button>
+                <input class="text" type="text" name="Digits" maxlength="4" size="4" id="" value="">
+            </div>
+            <div>
+                <a id="btnTvGuide" class="tvGuideButton button" href="#" target="GhidTV">TV Guide</a>
+            </div>
+        </div>
+    </form>
+
+    <script src="/js/slingerplayer.js"></script>
+
+    <script>
+
+        main();
+
+        function main() {
+
+            setFormAction();
+
+            setTitle();
+
+            setTvGuideButtonParameters();
+
+            setButtonHighlighting();
+
+            setTextBoxHighlighting();
+        }
+    </script>
+
+</body>
+
+
+</html>

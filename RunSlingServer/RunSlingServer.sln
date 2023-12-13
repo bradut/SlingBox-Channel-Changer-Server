@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33801.468
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunSlingServer", "RunSlingServer.csproj", "{2E0282A6-D588-4F16-A1BA-42EBD5B336B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunSlingServer.Tests", "RunSlingServer.Tests\RunSlingServer.Tests.csproj", "{F60120D3-3737-412F-9FFE-8485170B1DBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E0282A6-D588-4F16-A1BA-42EBD5B336B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E0282A6-D588-4F16-A1BA-42EBD5B336B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E0282A6-D588-4F16-A1BA-42EBD5B336B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E0282A6-D588-4F16-A1BA-42EBD5B336B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F60120D3-3737-412F-9FFE-8485170B1DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F60120D3-3737-412F-9FFE-8485170B1DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F60120D3-3737-412F-9FFE-8485170B1DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F60120D3-3737-412F-9FFE-8485170B1DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F70A9121-1F5E-43DF-B8E6-C5E404B39D7A}
+	EndGlobalSection
+EndGlobal
