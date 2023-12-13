@@ -1,4 +1,4 @@
-# Sling Server Wrapper
+# SlingBox Channel-Changer Server
 
 This is a **wrapper** around the [Slinger Server](https://github.com/GerryDazoo/Slinger/tree/main/CustomRemotes) which allows **channel-changing** capabilities when controlled by the [SlingBox-TV Guide](https://github.com/bradut/SlingBox-TVGuide) web app.
 
@@ -536,6 +536,7 @@ The Slingbox is a line of devices that allow users to remotely view and control 
 or satellite television.
  - [Slinger Server](https://github.com/GerryDazoo/Slinger) - open source server that controls the SlingBoxes, created by **Gerry Dazoo**
 - [Slinger Player](https://github.com/GerryDazoo/SlingerPlayer) - video player that streams from the Slinger, created by **Gerry Dazoo**
+- [SlingBox Channel-Changer TvGuide](https://github.com/bradut/SlingBox-Channel-Changer-TVGuide) - TV Guide with channel-change capability, created by **Bradut Dima** 
 - **AI Assistants** - used to generate code, documentation and proofreading.
   - [OpenAI ChatGPT3](https://chat.openai.com/)
   - [JetBrains AI Assistant](https://www.jetbrains.com/ai/)
