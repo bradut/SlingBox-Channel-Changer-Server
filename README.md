@@ -22,24 +22,25 @@ In this sense, a **wrapper** app enhances or extends the capabilities of an exis
 
 The **Sling Server Wrapper** (the wrapper) extends the Slinger server by:
 
-- circumventing Slinger's [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) policy by accepting channel-changing request from the [SlingBox-TV Guide](https://github.com/bradut/SlingBox-TVGuide) app located anywhere on internet.
+- circumventing Slinger's [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) policy and accepting channel-changing request from the [SlingBox-TV Guide](https://github.com/bradut/SlingBox-TVGuide) app located anywhere on internet.
 - preserving the state of the server between requests, allowing users to see the **currently selected channel**  of their Slingbox devices. (This functionaliy was available in the original SlingPlayer&trade; application.)
 <br />
 
 **Naming convention**: the terms "Sling Server Wrapper", "Slinger Server Wrapper", "wrapper" and various combinations are used interchangeably in this document.
 
-Notes:
+**Notes**:
 
-- the "**Wrapper**" is not a replacement for Slinger; it is an extension of it, and it requires Slinger to be installed and running on the same machine.
-- using the "**Wrapper**" does not interfere with Slinger setup and usage; it can be used in parallel with it by the users who want to use the **SlingBox-TV Guide** enhanced remote control mentioned above.<br />
+- The "**Wrapper**" is not a replacement for Slinger; it is an extension of it, and it requires Slinger to be installed and running on the same machine.
+- Using the "**Wrapper**" does not interfere with Slinger setup and usage; it can be used in parallel with it by the users who want to use the **SlingBox-TV Guide** enhanced remote control mentioned above.<br />
 <br />
 
 ## System Architecture
 
 <p align="center">
-<img src="./Docs/images/Architecture.jpg" alt="TvGuide Overview" height="600"><br />
-System Architecture - Slingboxes, Slinger Server, Slinger Server Wrapper, TvGuide Web App, TvGuide Data Source
+<img src="./Docs/images/Architecture.jpg" alt="TV Guide Overview" height="600"><br />
+System Architecture - Slingboxes, Slinger Server, Slinger Server Wrapper, TV Guide Web App, TV Guide Data Source
 </p>
+<br />
 
 This wrapper is a part of a wider system, as shown in the above diagram.
 
@@ -48,8 +49,8 @@ The system consists of:
 - **Slingbox Devices**: The devices controlled by the system.
 - **Slinger Server**: The server that communicates with the Slingbox devices and provides the API for controlling them.
 - **Slinger Server Wrapper**: This wrapper, extending the Slinger Server with the capabilities described above.
-- **TvGuide Web App**: A web application providing a TV Guide for Slingbox devices and a remote control for them.
-- **TvGuide Data Source**: A data source for the TvGuide Web App providing the TV Guide data.
+- **TV Guide Web App**: A web application providing a TV Guide for Slingbox devices and a remote control for them.
+- **TV Guide Data Source**: A data source for the TV Guide Web App providing the TV Guide data.
 <br /><br />
 
 Where to get these components?
@@ -57,15 +58,15 @@ Where to get these components?
 - **Slingbox devices**: Discontinued by Sling Media, available on the second-hand market.
 - **Slinger Server**: Open-source app created by Gerry Dazoo, downlodable from its [GitHub repo](https://github.com/GerryDazoo/Slinger).
 - **Sling Wrapper**: Open-source app created by Bradut Dima, downloadable from this GitHub repo.
-- **TvGuide Web App**: Open-source app created by Bradut Dima, downloadable from its [GitHub repo](https://github.com/bradut/SlingBox-TVGuide)
-- **TvGuide Data Source** To be created by the user, hosted anywhere on the Internet. Specific instructions provided in the TvGuide Web app repo.
+- **TV Guide Web App**: Open-source app created by Bradut Dima, downloadable from its [GitHub repo](https://github.com/bradut/SlingBox-TVGuide)
+- **TV Guide Data Source** To be created by the user, hosted anywhere on the Internet. Specific instructions provided in the TV Guide Web app repo.
 
 ## How it works?
 
 ### Slinger Server Functionality
 
 <p align="center">
-<img src="./Docs/images/Architecture-1a-Slinger.jpg" alt="TvGuide Overview" height="600"><br />
+<img src="./Docs/images/Architecture-1a-Slinger.jpg" alt="Slinger Architecture" height="600"><br />
 System Architecture - Slinger Server
 </p>
 
@@ -76,7 +77,7 @@ It can be seen that even when integrated with the wrapper, the **Slinger Server 
 ### Slinger Server WRAPPER Functionality
 
 <p align="center">
-<img src="./Docs/images/Architecture-2b-Sling_Wrapper.jpg" alt="TvGuide Overview" height="600"><br />
+<img src="./Docs/images/Architecture-2b-Sling_Wrapper.jpg" alt="Slinger Wrapper Architecture" height="600"><br />
 System Architecture - Slinger Server and Slinger Server Wrapper
 </p>
 
@@ -137,10 +138,10 @@ At FIRST RUN, the wrapper will:
 
 **Prerequisites**: 
 
-- You will need to **create a TvGuide web site** somewhere on your local machine or on the Internet.
+- You will need to **create a TV Guide web site** somewhere on your local machine or on the Internet.
 - You need to have a functional Slinger server, on a Windows machine.
 
-For demo purposes, I created two TVGuides apps on my server:<br />
+For demo purposes, I created two TV Guides apps on my server:<br />
 <http://tvGuideAnalogue.dima.mobi/TvGuide.html><br />
 <http://tvGuideDigital.dima.mobi/TvGuide.html><br />
 [They **will NOT work for you** because they are configured to work with my Slingbox devices, but you can use them as examples.]
@@ -256,7 +257,7 @@ Make these changes in `config.ini`
 
 -
   - (Keep using your remote) Include an element contaning "`Status:%s`" string, which will trigger Slinger Server to replace it with its status.<br />
-  This element will help SlingBox-TVGuide to know immediately when the slingbox has stopped streaming, otherwise will have to wait for 100 seconds of server inactivity.
+  This element will help SlingBox - TV Guide to know immediately when the slingbox has stopped streaming, otherwise will have to wait for 100 seconds of server inactivity.
 
 ```html
   <div id="slingStatus" style="color: Transparent; font-size: 1px">
@@ -269,7 +270,7 @@ Make these changes in `config.ini`
 <br />
 <br />
 
-- (Optional) In case some of your slingboxes require a specific TVGuide page, different from the rest, then add the entry 'tvGuidUrl':
+- (Optional) In case some of your slingboxes require a specific TV Guide page, different from the rest, then add the entry 'tvGuidUrl':
 
 ```ini
 tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html    ;<-- Add this if needed
@@ -345,8 +346,8 @@ This is the default `appsettings.json` configuration file generated by the wrapp
 ```
 
 - Update the URL of the TV Guide web app to match your own.<br />
-`TvGuideUrl` is the URL that will be used by the wrapper to communicate with the TvGuide web app to send/receive channel-change requests<br />
-If you haven't configure  a TvGuide web app web page, you may use <http://tvGuideAnalogue.dima.mobi/TvGuide.html> for demo purposes<br />
+`TvGuideUrl` is the URL that will be used by the wrapper to communicate with the TV Guide web app to send/receive channel-change requests<br />
+If you haven't configure  a TV Guide web app web page, you may use <http://tvGuideAnalogue.dima.mobi/TvGuide.html> for demo purposes<br />
 (note: this **will not work for you**, but it's helpful to see how it can be integrated with the wrapper via a remote-control page)<br />
 If you have multiple slingboxes, the wrapper will, by default, use this TV Guide URL for all of them, but this can be overriden for each slingbox, as described above, in the **Update `config.ini`** paragraph.
 
@@ -395,7 +396,7 @@ The wrapper is a Web API application, and it uses the Kestrel web server to list
 In this section you can update the port number used by the wrapper.
 
 If you want to use HTTPS, you will need to update the configuration accordingly and you will need to provide a certificate for the wrapper.<br />
-Avoid using HTTPS if your TvGuide web app is not also using HTTPS because some browsers will block the requests from the Wwrapper to the TvGuide web app.<br /> 
+Avoid using HTTPS if your TV Guide web app is not also using HTTPS because some browsers will block the requests from the Wrapper to the web app.<br /> 
 (may work with Chrome, but not with Firefox)
 
 Here is an example of the the config file with an `HTTPS` endpoint:
@@ -432,7 +433,7 @@ You can update the path and the name of the log file if you want to.<br />
 
 ### About SlingBoxStatus.json
 
-This file stores a simplified form of the `server status`- it contains only values relevant to SlingBox-TvGuide channel changer app.<br />
+This file stores a simplified form of the `server status`- it contains only values relevant to SlingBox - TV Guide channel changer app.<br />
 It has been created by the Wrapper at first run with information gathered from `config.ini` and `appsettings.json` and will be updated by the Wrapper whenever it detects an event while reading the Slinger's console.<br />
 `Note: Do not modify this file !` <br />
 
@@ -482,23 +483,23 @@ The file above stores a snapshot of the **`status of the wrapper server`** which
     
   - `isAnalogue`: (true or false) = The type of video-sources, identified by the wrapper based on the Slinger documentation.<br />
     For example, a video-source is considered analogue for slingboxes of type "**Pro**" or "**ProHD**" when **VideoSource = 0**.<br />
-    Furthermore, this setting is used by the wrapper to identify the channel-changing info when reading Slinger's console output and sending commands to the TVGuide.<br />
+    Furthermore, this setting is used by the wrapper to identify the channel-changing info when reading Slinger's console output and sending commands to the TV Guide.<br />
      
   - `lastHeartBeatTimeStamp`: The last time when the wrapper has detected Slinger console output for a specific slingBox device.<br />
      This setting let TV Guide know if a certain slingBox is still streaming or not, so that it can adjust its UI accordingly (change the aspect of the channel buttons on the web page, etc.).<br /> 
      The wrapper will automatically change this value to `null` if it is older than 100 seconds, based on the fact that, every 90 second, Slinger display on its console information about each of its slinboxess that are currently streaming.<br />
      The values of this setting can be either `null` or the date-time of the last event in the format `"2023-12-07T18:54:05"`.
 
-  - `tvGuideUrl`: This is an OPTIONAL setting to indicate that the TVGuide URL for a certain slingBox is different than the server-wide TVGuide URL.<br />
-    For example, above is a configuration where **slingbox_1**, having a **digital** video-source, uses the TvGuide with the URL `http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html` instead if the server-wide TVGuide for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined below for all other slingboxes.
+  - `tvGuideUrl`: This is an OPTIONAL setting to indicate that the TV Guide URL for a certain slingBox is different than the server-wide TV Guide URL.<br />
+    For example, above is a configuration where **slingbox_1**, having a **digital** video-source, uses the TV Guide with the URL `http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html` instead if the server-wide TV Guide for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined below for all other slingboxes.
 
 - The server-wide settings in SlingBoxStatus.json are:
   - `urlBase`: From `config.ini` - see Slinger's documentation.
-  - `tvGuideUrl`: From `appsettings.config`, this is the URL of the channel-changer SlingBox-TVGuide.<br />
-  Unless it is overrriden at SlingBox level as shown above for `sling_1`, this URL will be used by the the remote control of each slingbox to open the TVGuide page.
+  - `tvGuideUrl`: From `appsettings.config`, this is the URL of the channel-changer SlingBox-TV Guide.<br />
+  Unless it is overrriden at SlingBox level as shown above for `sling_1`, this URL will be used by the the remote control of each slingbox to open the TV Guide page.
 
   - `slingRemoteControlServiceUrl`: From `appsettings.config`, this is the URL of the Slinger Wrapper.<br />
-  It will be passsed to the TVGuide so that it wiil be able to communicate back with the Wrapper.<br />
+  It will be passsed to the TV Guide so that it wiil be able to communicate back with the Wrapper.<br />
 <br />
 
 **Summary**: The server status values in the file `SlingBoxStatus.json` are kept automatically in sync with:

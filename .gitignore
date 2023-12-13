@@ -375,3 +375,6 @@ FodyWeavers.xsd
 /Docs/images/Revizie Tehnica - TVR1.jpg
 *.xml
 /RunSlingServer/Assets/RunSlingServerGrey.ico
+/RunSlingServer/config_org.ini
+/RunSlingServer/*.ini
+/RunSlingServer/config_org.ini

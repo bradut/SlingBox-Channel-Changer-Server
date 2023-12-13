@@ -83,19 +83,19 @@ namespace RunSlingServer.Helpers
 
             var slingBoxesInSlingerConfig = slingerConfig.SlingBoxes;
  
-            foreach (var (slingBoxName, slingBoxSlingerData) in slingBoxesInSlingerConfig)
+            foreach (var (slingBoxName, configData) in slingBoxesInSlingerConfig)
             {
                 var slingBoxStatus = slingBoxServerStatus.GetSlingBoxStatus(slingBoxName);
 
-                if (slingBoxStatus.IsAnalogue != slingBoxSlingerData.IsAnalogue)
+                if (slingBoxStatus.IsAnalogue != configData.IsAnalogue)
                 {
-                    slingBoxServerStatus.SetSlingBoxIsAnalogue(slingBoxName, slingBoxSlingerData.IsAnalogue);
+                    slingBoxServerStatus.SetSlingBoxIsAnalogue(slingBoxName, configData.IsAnalogue);
                     hasChanges = hasChanges || true;
                 }
 
-                if (slingBoxStatus.TvGuideUrl != slingBoxSlingerData.TvGuideUrl)
+                if (slingBoxStatus.TvGuideUrl != configData.TvGuideUrl)
                 {
-                    slingBoxServerStatus.SetSlingBoxTvGuideUrl(slingBoxName, slingBoxSlingerData.TvGuideUrl);
+                    slingBoxServerStatus.SetSlingBoxTvGuideUrl(slingBoxName, configData.TvGuideUrl);
                     hasChanges = hasChanges || true;
                 }
             }
@@ -121,6 +121,13 @@ namespace RunSlingServer.Helpers
                 slingBoxServerStatus.TvGuideUrl = appConfig.TvGuideUrl;
                 hasChanges = hasChanges || true;
             }
+
+            if (slingBoxServerStatus.SlingRemoteControlServiceUrl != appConfig.SlingRemoteControlServiceUrl)
+            {
+                slingBoxServerStatus.SlingRemoteControlServiceUrl = appConfig.SlingRemoteControlServiceUrl;
+                hasChanges = hasChanges || true;
+            }
+
 
             return hasChanges;
         }

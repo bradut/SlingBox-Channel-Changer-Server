@@ -173,6 +173,15 @@ namespace RunSlingServer.Services.SignalR
                         await Connection.StartAsync(cancelToken);
                     }
                 }
+                catch (Exception ex)
+                {
+                    var errMsg = $"SignalR: Error while creating connection to {HubEndpoint}, error message: {ex.Message}";
+                    Console.WriteLine($"* ******************************************************\n" +
+                                      $"{errMsg}\n" +
+                                      $"* ******************************************************\n\n");
+                    _logger?.LogError(ex, errMsg);
+                    throw;
+                }
                 finally
                 {
                     ConnectionSyncLock.Release();
