@@ -9,7 +9,6 @@ namespace UnitTests.MainApp
 {
     public class SyncAppStatusTests
     {
-
         private readonly IFileSystemAccess _fileSystemAccess = Substitute.For<IFileSystemAccess>();
         private readonly ISlingerConfigurationParser _slingerConfigParser = Substitute.For<ISlingerConfigurationParser>();
         private readonly IAppConfiguration _appConfig = Substitute.For<IAppConfiguration>();
@@ -30,6 +29,7 @@ namespace UnitTests.MainApp
             Assert.True(result.IsSuccess);
             Assert.True(result.ErrorMessages.Count == 0);
 
+            // SlingBox-specific settings
             Assert.Equal(3, result.Value.SlingBoxesCount);
             Assert.Equal(Sling0, result.Value.SlingBoxes.FirstOrDefault(s => s.Key == Sling0).Key);
             Assert.Equal(Sling1, result.Value.SlingBoxes.FirstOrDefault(s => s.Key == Sling1).Key);
@@ -37,9 +37,8 @@ namespace UnitTests.MainApp
 
             Assert.Equal(TvGuideUrlDigital, result.Value.GetSlingBoxStatus(Sling0).TvGuideUrl);
             Assert.True(string.IsNullOrWhiteSpace(result.Value.GetSlingBoxStatus(Sling1).TvGuideUrl));
-            Assert.Equal(TvGuideUrlAnalogue, result.Value.TvGuideUrl);
 
-
+            
             Assert.Equal(800, result.Value.GetSlingBoxStatus(Sling0).CurrentChannelNumber);
             Assert.Equal(801, result.Value.GetSlingBoxStatus(Sling1).CurrentChannelNumber);
             Assert.Equal(802, result.Value.GetSlingBoxStatus(Sling2).CurrentChannelNumber);
@@ -48,13 +47,17 @@ namespace UnitTests.MainApp
             Assert.True(result.Value.GetSlingBoxStatus(Sling1).IsAnalogue);
             Assert.False(result.Value.GetSlingBoxStatus(Sling2).IsAnalogue); // 350/500/M1
 
+            // Server-wide settings
+            Assert.Equal(TvGuideUrlAnalogue, result.Value.TvGuideUrl);
+            Assert.Equal(SlingerServerWrapperUrl, result.Value.SlingRemoteControlServiceUrl);
+
             _fileSystemAccess.Received(1).LoadSlingBoxServerStatusFromFile();
             _fileSystemAccess.Received(1).SaveToJsonFile(Arg.Is<SlingBoxServerStatus>(sss => sss.SlingBoxes.Count == 3));
         }
 
 
         [Fact]
-        public void SynchronizeAppStatus_NoServerStatusFileFound_ReturnsDefaultValueResult()
+        public void SynchronizeAppStatus_NoSlingBoxServerStatusFileFound_ReturnsDefaultValueResult()
         {
             // Arrange
             _fileSystemAccess.LoadSlingBoxServerStatusFromFile().Returns(null as SlingBoxServerStatus);
@@ -69,6 +72,7 @@ namespace UnitTests.MainApp
             Assert.True(result.IsSuccess);
             Assert.True(result.ErrorMessages.Count == 0);
 
+            // SlingBox-specific settings
             Assert.Equal(3, result.Value.SlingBoxesCount);
             Assert.Equal(Sling0, result.Value.SlingBoxes.FirstOrDefault(s => s.Key == Sling0).Key);
             Assert.Equal(Sling1, result.Value.SlingBoxes.FirstOrDefault(s => s.Key == Sling1).Key);
@@ -76,9 +80,7 @@ namespace UnitTests.MainApp
 
             Assert.Equal(TvGuideUrlDigital, result.Value.GetSlingBoxStatus(Sling0).TvGuideUrl);
             Assert.True(string.IsNullOrWhiteSpace(result.Value.GetSlingBoxStatus(Sling1).TvGuideUrl));
-            Assert.Equal(TvGuideUrlAnalogue, result.Value.TvGuideUrl);
-
-
+  
             Assert.Equal(-1, result.Value.GetSlingBoxStatus(Sling0).CurrentChannelNumber);
             Assert.Equal(-1, result.Value.GetSlingBoxStatus(Sling1).CurrentChannelNumber);
             Assert.Equal(-1, result.Value.GetSlingBoxStatus(Sling2).CurrentChannelNumber);
@@ -86,6 +88,11 @@ namespace UnitTests.MainApp
             Assert.False(result.Value.GetSlingBoxStatus(Sling0).IsAnalogue);
             Assert.True(result.Value.GetSlingBoxStatus(Sling1).IsAnalogue);
             Assert.False(result.Value.GetSlingBoxStatus(Sling2).IsAnalogue); // 350/500/M1
+
+            // Server-wide settings
+            Assert.Equal(TvGuideUrlAnalogue, result.Value.TvGuideUrl);
+            Assert.Equal(SlingerServerWrapperUrl, result.Value.SlingRemoteControlServiceUrl);
+
 
             _fileSystemAccess.Received(1).LoadSlingBoxServerStatusFromFile();
             _fileSystemAccess.Received(1).SaveToJsonFile(Arg.Is<SlingBoxServerStatus>(sss => sss.SlingBoxes.Count == 3));
@@ -109,6 +116,7 @@ namespace UnitTests.MainApp
             Assert.True(result.IsSuccess);
             Assert.True(result.ErrorMessages.Count == 0);
 
+            // SlingBox-specific settings
             Assert.Equal(3, result.Value.SlingBoxesCount);
             Assert.Equal(Sling0, result.Value.SlingBoxes.FirstOrDefault(s => s.Key == Sling0).Key);
             Assert.Equal(Sling1, result.Value.SlingBoxes.FirstOrDefault(s => s.Key == Sling1).Key);
@@ -116,9 +124,7 @@ namespace UnitTests.MainApp
 
             Assert.Equal(TvGuideUrlDigital, result.Value.GetSlingBoxStatus(Sling0).TvGuideUrl);
             Assert.True(string.IsNullOrWhiteSpace(result.Value.GetSlingBoxStatus(Sling1).TvGuideUrl));
-            Assert.Equal(TvGuideUrlAnalogue, result.Value.TvGuideUrl);
-
-
+     
             Assert.Equal(-1, result.Value.GetSlingBoxStatus(Sling0).CurrentChannelNumber);
             Assert.Equal(-1, result.Value.GetSlingBoxStatus(Sling1).CurrentChannelNumber);
             Assert.Equal(-1, result.Value.GetSlingBoxStatus(Sling2).CurrentChannelNumber);
@@ -126,6 +132,10 @@ namespace UnitTests.MainApp
             Assert.False(result.Value.GetSlingBoxStatus(Sling0).IsAnalogue);
             Assert.True(result.Value.GetSlingBoxStatus(Sling1).IsAnalogue);
             Assert.False(result.Value.GetSlingBoxStatus(Sling2).IsAnalogue); //350/500/M1
+
+            // Server-wide settings
+            Assert.Equal(TvGuideUrlAnalogue, result.Value.TvGuideUrl);
+            Assert.Equal(SlingerServerWrapperUrl, result.Value.SlingRemoteControlServiceUrl);
 
             _fileSystemAccess.Received(1).LoadSlingBoxServerStatusFromFile();
             _fileSystemAccess.Received(1).SaveToJsonFile(Arg.Is<SlingBoxServerStatus>(sss => sss.SlingBoxes.Count == 3));
@@ -159,8 +169,7 @@ namespace UnitTests.MainApp
         private const string TvGuideUrlAnalogue = "http://localhost:9080";
         private const string SlingerServerWrapperUrl = "http://localhost:9081";
 
-
-
+        
         private static SlingBoxServerStatus CreateSlingBoxServerStatus()
         {
             var slingBoxServerStatus = new SlingBoxServerStatus
@@ -260,8 +269,7 @@ namespace UnitTests.MainApp
         }
 
 
-        // Old style config.ini file
-
+        // Original-style config.ini file [single SlingBox]
         private static SlingerConfiguration CreateOldStyleSlingerConfiguration()
         {
             var slingerConfiguration = new SlingerConfiguration
@@ -281,9 +289,7 @@ namespace UnitTests.MainApp
                 TvGuideUrl = TvGuideUrlDigital
             };
 
-
             slingerConfiguration.AddSlingBox(sb1);
-
 
             return slingerConfiguration;
         }

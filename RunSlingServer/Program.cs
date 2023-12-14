@@ -82,7 +82,7 @@ static void DisplayMessage(string message)
     Console.ForegroundColor = color;
     Console.WriteLine("Press any key to continue...");
 
-    SoundsPlayer.PlayArpeggio();
+    SoundPlayer.PlayArpeggio();
 
     Task.Factory.StartNew(Console.ReadKey).Wait(TimeSpan.FromSeconds(5.0));
 }

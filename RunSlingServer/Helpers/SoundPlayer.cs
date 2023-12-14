@@ -2,7 +2,7 @@
 
 namespace RunSlingServer.Helpers
 {
-    public class SoundsPlayer
+    public class SoundPlayer
     {
         private static readonly Dictionary<string, double> Notes = new()
         {
@@ -41,7 +41,7 @@ namespace RunSlingServer.Helpers
                 "DO"
             };
 
-            const int duration = 200;
+            const int duration = 100;
             foreach (var note in solfeggioNotes)
             {
                 PlayNote(note, duration);

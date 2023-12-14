@@ -124,7 +124,6 @@ namespace RunSlingServer.Configuration.Models
         public LoggingSettings Logging { get; set; } = new();
         public string AllowedHosts { get; set; } = "*";
         public KestrelSettings Kestrel { get; set; } = new();
-        //public IISExpressSettings IISExpress { get; set; } = new();
 
 
         private string _webApiBaseUrl = "";
@@ -145,49 +144,24 @@ namespace RunSlingServer.Configuration.Models
             }
         }
 
-        [JsonIgnore]
-        public string AppSettingsFullPath => Path.Combine(Directory.GetCurrentDirectory(), JsonFileName);
-
 
         [JsonIgnore]
         public string RootPath => Directory.GetCurrentDirectory();
 
+        [JsonIgnore]
+        public Dictionary<string, string?>? RemoteControlIrCodes => AppSettings.RemoteControlIrCodes;
 
         [JsonIgnore]
-        public Dictionary<string, string?>? RemoteControlIrCodes
-        {
-            get => AppSettings.RemoteControlIrCodes;
-            set => throw new NotSupportedException();
-        }
-
-
-        [JsonIgnore]
-        public string SlingboxServerExecutableName
-        {
-            get => AppSettings.SlingboxServer.ExecutableName;
-            set => throw new NotSupportedException();
-        }
-
-
+        public string SlingboxServerExecutableName => AppSettings.SlingboxServer.ExecutableName;
+        
         [JsonIgnore]
         public string SlingBoxServerConfigFileName => AppSettings.SlingboxServer.Arguments.FirstOrDefault() ?? "config.ini";
 
+        [JsonIgnore]
+        public string TvGuideUrl => AppSettings.TvGuide.TvGuideUrl;
 
         [JsonIgnore]
-        public string TvGuideUrl
-        {
-            get => AppSettings.TvGuide.TvGuideUrl;
-            set => throw new NotSupportedException();
-        }
-
-
-        [JsonIgnore]
-        public string SlingRemoteControlServiceUrl
-        {
-            get => AppSettings.TvGuide.SlingRemoteControlUrl;
-            set => throw new NotSupportedException();
-        }
-
+        public string SlingRemoteControlServiceUrl => AppSettings.TvGuide.SlingRemoteControlUrl;
 
         [JsonIgnore]
         public bool RequiresUpdate => AppSettings.RequiresUpdate;
@@ -223,8 +197,7 @@ namespace RunSlingServer.Configuration.Models
 #pragma warning disable IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
             var indentedJson = JsonSerializer.Serialize(this, options);
 #pragma warning restore IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
-
-
+            
             return indentedJson;
         }
     }
@@ -247,7 +220,7 @@ namespace RunSlingServer.Configuration.Models
     }
 
     /// <summary>
-    /// Hand made converter for EndpointsSettings that does not write Https if it is null, but can read it if is not null.
+    /// Hand made JSON converter for EndpointsSettings that does not write Https if it is null, but can read it if is not null.
     /// </summary>
     public class EndpointsSettingsConverter : JsonConverter<EndpointsSettings>
     {
@@ -266,6 +239,7 @@ namespace RunSlingServer.Configuration.Models
                 {
                     return endpointsSettings;
                 }
+
                 if (reader.TokenType == JsonTokenType.PropertyName)
                 {
                     var propertyName = reader.GetString() ?? string.Empty;
@@ -320,4 +294,12 @@ namespace RunSlingServer.Configuration.Models
         }
     }
 
+
+    [JsonSourceGenerationOptions(WriteIndented = true)]
+    [JsonSerializable(typeof(AppConfiguration))]
+
+    public partial class ApplicationSettingsSerializerContext : JsonSerializerContext
+    {
+
+    }
 }

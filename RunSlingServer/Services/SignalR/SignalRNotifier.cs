@@ -3,6 +3,7 @@ using Application.Services;
 using Application.SignalRServices;
 using Application.SignalRServices.Notifications;
 using Microsoft.AspNetCore.SignalR.Client;
+using RunSlingServer.Helpers;
 
 namespace RunSlingServer.Services.SignalR
 {
@@ -41,7 +42,7 @@ namespace RunSlingServer.Services.SignalR
 
             if (Connection is null)
             {
-                await DisplayMessage($"{nameof(NotifyClients)}(): SignalR connection is null", true);
+                await DisplayMessageAsync($"{nameof(NotifyClients)}(): SignalR connection is null", true);
                 return;
             }
 
@@ -59,16 +60,16 @@ namespace RunSlingServer.Services.SignalR
 
                     await Connection.InvokeAsync(notification.SignalRHubMethodName, notification, cancellationToken: _cancellationToken);
 
-                    await DisplayMessage($"Notified others about {notification.SignalRClientMethodName}, {notification.SlingBoxName}");
+                    await DisplayMessageAsync($"Notified others about {notification.SignalRClientMethodName}, {notification.SlingBoxName}");
                 }
                 catch (Exception ex)
                 {
-                    await DisplayMessage(ex.Message, true);
+                    await DisplayMessageAsync(ex.Message, true);
                 }
             }
             else
             {
-                await DisplayMessage($"{nameof(NotifyClients)}(): SignalR connection is NOT Connected: {Connection.State}");
+                await DisplayMessageAsync($"{nameof(NotifyClients)}(): SignalR connection is NOT Connected: {Connection.State}");
             }
         }
 
@@ -94,44 +95,7 @@ namespace RunSlingServer.Services.SignalR
                 .Build();
 
 
-            Connection.On<string, string>("ReceiveMessage", async (user, message) =>
-            {
-                await DisplayMessage($"{user}: {message}");
-            });
-
-
-            Connection.Remove("ChannelChanged");
-            Connection.On("ChannelChanged", async (ChannelChangedNotification receivedNotification) =>
-            {
-                await DisplayNotificationInfo(receivedNotification, true);
-            });
-
-
-            Connection.Remove("StreamingInProgress");
-            Connection.On("StreamingInProgress", async (StreamingInProgressNotification receivedNotification) =>
-            {
-                await DisplayNotificationInfo(receivedNotification, true);
-            });
-
-
-            Connection.Remove("StreamingStopped");
-            Connection.On("StreamingStopped", async (StreamingStoppedNotification receivedNotification) =>
-            {
-                await DisplayNotificationInfo(receivedNotification, true);
-            });
-
-            Connection.Remove("SlingBoxBricked");
-            Connection.On("SlingBoxBricked", async (SlingBoxBrickedNotification receivedNotification) =>
-            {
-                await DisplayNotificationInfo(receivedNotification, true);
-            });
-
-            Connection.Remove("RemoteLocked");
-            Connection.On("RemoteLocked", async (RemoteLockedNotification receivedNotification) =>
-            {
-                await DisplayNotificationInfo(receivedNotification, true);
-            });
-
+            RegisterConnectionEventHandlers();
 
 
             // Register a callback function to handle the Closed event of the SignalR connection.
@@ -173,24 +137,86 @@ namespace RunSlingServer.Services.SignalR
                         await Connection.StartAsync(cancelToken);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    var errMsg = $"SignalR: Error while creating connection to {HubEndpoint}, error message: {ex.Message}";
-                    Console.WriteLine($"* ******************************************************\n" +
-                                      $"{errMsg}\n" +
-                                      $"* ******************************************************\n\n");
-                    _logger?.LogError(ex, errMsg);
-                    throw;
+                    var displayErrMsg = GenerateDisplayErrMsg(exception);
+                    await DisplayMessageAsync(displayErrMsg, true);
+
+                    var errMsg = $"SignalR: Error creating connection to '{HubEndpoint}'";
+                    _logger?.LogError(exception, errMsg);  //throw;
+
+                    SoundPlayer.PlayArpeggio();
                 }
                 finally
                 {
                     ConnectionSyncLock.Release();
                 }
             }
+
+
+            string GenerateDisplayErrMsg(Exception ex)
+            {
+
+                var displayErrMsg = $"SignalR: Error creating connection to '{HubEndpoint}'.\n\n" +
+
+                                    "This server will not be able to communicate with with the channel-changer TV Guide.\n\n" +
+
+                                    "Please check if the endpoint above belongs to THIS server, if port forwarding to your server is correct, etc.\n\n" +
+
+                                    $"Error message: {ex.Message}";
+                return displayErrMsg;
+            }
         }
 
+        private void RegisterConnectionEventHandlers()
+        {
+
+            if (Connection == null)
+            {
+                _logger?.LogError("SignalR: Connection is null");
+
+                DisplayMessageAsync("SignalR: Connection is null", true).GetAwaiter().GetResult();
+                return;
+            }
+
+           
+            Connection.Remove("ChannelChanged");
+            Connection.On("ChannelChanged",
+                async (ChannelChangedNotification receivedNotification) =>
+                {
+                    await DisplayNotificationInfo(receivedNotification, true);
+                });
 
 
+            Connection.Remove("StreamingInProgress");
+            Connection.On("StreamingInProgress",
+                async (StreamingInProgressNotification receivedNotification) =>
+                {
+                    await DisplayNotificationInfo(receivedNotification, true);
+                });
+
+
+            Connection.Remove("StreamingStopped");
+            Connection.On("StreamingStopped",
+                async (StreamingStoppedNotification receivedNotification) =>
+                {
+                    await DisplayNotificationInfo(receivedNotification, true);
+                });
+
+            Connection.Remove("SlingBoxBricked");
+            Connection.On("SlingBoxBricked",
+                async (SlingBoxBrickedNotification receivedNotification) =>
+                {
+                    await DisplayNotificationInfo(receivedNotification, true);
+                });
+
+            Connection.Remove("RemoteLocked");
+            Connection.On("RemoteLocked",
+                async (RemoteLockedNotification receivedNotification) =>
+                {
+                    await DisplayNotificationInfo(receivedNotification, true);
+                });
+        }
 
 
         private async Task DisplayNotificationInfo(ISignalRNotification notification, bool isNotificationReceived)
@@ -240,7 +266,7 @@ namespace RunSlingServer.Services.SignalR
                         break;
 
                     default:
-                        await DisplayMessage($"Unknown notification type {notification.GetType()}, Event origin {notification.EventOrigin}, TimeStamp {notification.Timestamp}", true);
+                        await DisplayMessageAsync($"Unknown notification type {notification.GetType()}, Event origin {notification.EventOrigin}, TimeStamp {notification.Timestamp}", true);
                         break;
                 }
 
@@ -250,7 +276,7 @@ namespace RunSlingServer.Services.SignalR
         }
 
 
-        private async Task DisplayMessage(string message, bool isError = false)
+        private async Task DisplayMessageAsync(string message, bool isError = false)
         {
             using (await _console.GetLockAsync())
             {

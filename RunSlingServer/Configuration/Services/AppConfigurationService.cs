@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Application.Abstractions;
+﻿using Application.Abstractions;
 using Domain.Abstractions;
 using RunSlingServer.Configuration.Models;
 
@@ -47,7 +46,7 @@ namespace RunSlingServer.Configuration.Services
             if (!File.Exists(AppSettingsConfigFileName))
             {
                 var appSettings = new AppConfiguration();
-                SetSlingerConfigFile(appSettings);
+                SetSlingerConfigFileNameAsParameter(appSettings);
 
                 SaveConfiguration(appSettings);
 
@@ -78,9 +77,12 @@ namespace RunSlingServer.Configuration.Services
 
             _appSettings.AppSettings.TvGuide = new TvGuideSettings
             {
-                TvGuideUrl = configuration["AppSettings:TvGuide:TvGuideUrl"] ?? "http://localhost:80/TvGuideWebSite/TvGuide.html",
-                SlingRemoteControlUrl = configuration["AppSettings:TvGuide:SlingRemoteControlUrl"] ?? "http://localhost:5196/api/post-to-url"
+                TvGuideUrl = configuration["AppSettings:TvGuide:TvGuideUrl"] ?? string.Empty,
+                SlingRemoteControlUrl = configuration["AppSettings:TvGuide:SlingRemoteControlUrl"] ?? string.Empty
             };
+
+            if (string.IsNullOrWhiteSpace(_appSettings.AppSettings.TvGuide.TvGuideUrl)) throw new KeyNotFoundException("AppSettings:TvGuide:TvGuideUrl");
+            if (string.IsNullOrWhiteSpace(_appSettings.AppSettings.TvGuide.SlingRemoteControlUrl)) throw new KeyNotFoundException("AppSettings:TvGuide:SlingRemoteControlUrl");
 
             try
             {
@@ -126,7 +128,7 @@ namespace RunSlingServer.Configuration.Services
             return _appSettings;
         }
 
-        private void SetSlingerConfigFile(AppConfiguration appSettings)
+        private void SetSlingerConfigFileNameAsParameter(AppConfiguration appSettings)
         {
             if (appSettings.AppSettings.SlingboxServer.Arguments.Any())
             {
@@ -156,7 +158,7 @@ namespace RunSlingServer.Configuration.Services
                 }
                 else
                 {
-                    var msg = "Could not find any config file in the current directory: " + Directory.GetCurrentDirectory();
+                    var msg = "Could not find any 'ini' config file in the current directory: " + Directory.GetCurrentDirectory();
                     var color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"****************************************************\n" +
@@ -169,12 +171,4 @@ namespace RunSlingServer.Configuration.Services
         }
     }
 
-
-    [JsonSourceGenerationOptions(WriteIndented = true)]
-    [JsonSerializable(typeof(AppConfiguration))]
-
-    public partial class ApplicationSettingsSerializerContext : JsonSerializerContext
-    {
-
-    }
 }
