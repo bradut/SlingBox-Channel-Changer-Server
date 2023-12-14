@@ -41,7 +41,7 @@ namespace RunSlingServer.Helpers
                 "DO"
             };
 
-            const int duration = 100;
+            const int duration = 50;
             foreach (var note in solfeggioNotes)
             {
                 PlayNote(note, duration);

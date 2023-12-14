@@ -1,4 +1,5 @@
 ﻿using RunSlingServer.Configuration.Models;
+using RunSlingServer.Helpers;
 
 namespace RunSlingServer.Configuration.Services
 {
@@ -31,7 +32,7 @@ namespace RunSlingServer.Configuration.Services
 
             var lines = configBody
                 .Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(line => !line.StartsWith(";"))
+                .Where(line => !line.StartsWith(';') && (line.Contains('=') || line.Contains('[') && line.Contains(']')))
                 .Select(line => line.Trim())
                 .ToList();
 
@@ -115,26 +116,20 @@ namespace RunSlingServer.Configuration.Services
         {
             foreach (var line in serverConfigLines)
             {
-                if (line.StartsWith("port", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    serverConfig.Port = int.Parse(GetLineValue(line));
-                }
+                var key = line.Split('=')[0].Trim().ToLowerInvariant();
 
-                // single slingbox config
-                else if (line.StartsWith("maxstreams", StringComparison.InvariantCultureIgnoreCase))
+                switch (key)
                 {
-                    serverConfig.MaxRemoteStreams = int.Parse(GetLineValue(line));
-                }
-
-                // multiple slingboxes config
-                else if (line.StartsWith("maxremotestreams", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    serverConfig.MaxRemoteStreams = int.Parse(GetLineValue(line));
-                }
-
-                else if (line.StartsWith("URLbase", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    serverConfig.UrlBase = GetLineValue(line);
+                    case "port":
+                        serverConfig.Port = int.Parse(GetLineValue(line));
+                        break;
+                    case "maxstreams": // single slingbox config
+                    case "maxremotestreams": // multiple slingboxes config
+                        serverConfig.MaxRemoteStreams = int.Parse(GetLineValue(line));
+                        break;
+                    case "urlbase":
+                        serverConfig.UrlBase = GetLineValue(line);
+                        break;
                 }
             }
         }
@@ -143,30 +138,30 @@ namespace RunSlingServer.Configuration.Services
         {
             foreach (var line in slingBoxConfigLines)
             {
-                if (line.StartsWith("sbtype", StringComparison.InvariantCultureIgnoreCase))
+                var key = line.Split('=')[0].Trim().ToLowerInvariant();
+
+                switch (key)
                 {
-                    slingBoxConfig.SlingBoxType = GetLineValue(line);
+                    case "sbtype":
+                        slingBoxConfig.SlingBoxType = GetLineValue(line);
+                        break;
+                    case "videosource":
+                        slingBoxConfig.VideoSource = int.Parse(GetLineValue(line));
+                        break;
+                    case "name":
+                        slingBoxConfig.SlingBoxName = GetLineValue(line);
+                        break;
+                    case "remote":
+                        slingBoxConfig.RemoteControlFileName = GetLineValue(line);
+                        break;
+                    case "tvguideurl":
+                        slingBoxConfig.TvGuideUrl = GetLineValue(line);
+                        break;
+                    case "include": // old-style config remote control file name
+                        slingBoxConfig.RemoteControlFileName = GetLineValue(line);
+                        break;
                 }
-                else if (line.StartsWith("VideoSource", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    slingBoxConfig.VideoSource = int.Parse(GetLineValue(line));
-                }
-                else if (line.StartsWith("name", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    slingBoxConfig.SlingBoxName = GetLineValue(line);
-                }
-                else if (line.StartsWith("Remote", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    slingBoxConfig.RemoteControlFileName = GetLineValue(line);
-                }
-                else if (line.StartsWith("tvGuideUrl", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    slingBoxConfig.TvGuideUrl = GetLineValue(line);
-                }
-                else if (line.StartsWith("include", StringComparison.CurrentCultureIgnoreCase)) // old-style config remote control file
-                {
-                    slingBoxConfig.RemoteControlFileName = GetLineValue(line);
-                }
+
             }
         }
 
@@ -176,7 +171,7 @@ namespace RunSlingServer.Configuration.Services
             if (string.IsNullOrWhiteSpace(line)) throw new ArgumentNullException(nameof(line));
             if (!line.Contains('=')) throw new InvalidDataException($"Missing '=' in {line}");
 
-            if (line.Contains(";")) line = line.Substring(0, line.IndexOf(';')); // remove in-line comments
+            if (line.Contains(';')) line = line.Substring(0, line.IndexOf(';')); // remove in-line comments
 
             var parts = line.Split('=');
 
@@ -231,11 +226,9 @@ namespace RunSlingServer.Configuration.Services
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(errMsg);
-                Console.WriteLine(errMsg);
-                Console.WriteLine(errMsg);
-                Console.WriteLine(errMsg);
                 Console.ForegroundColor = consoleColor;
 
+                SoundPlayer.PlayArpeggio();
                 _logger?.LogError(errMsg);
 
                 throw new FileNotFoundException(errMsg);

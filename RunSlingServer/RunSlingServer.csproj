@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-<!--<Project Sdk="Microsoft.NET.Sdk">-->
   <PropertyGroup>
 
     <!--The entry point of this app is not defined in the project itself but in another file-->
