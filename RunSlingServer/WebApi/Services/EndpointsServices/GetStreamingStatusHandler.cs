@@ -29,9 +29,7 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             if (!context.Request.Query.ContainsKey(slingBoxNameParameterName))
             {
                 const string errorMessage = $"WebApi Get: Missing '{slingBoxNameParameterName}' parameter";
-                _logger.LogError(errorMessage);
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsync(errorMessage);
+                await HandleError(errorMessage);
 
                 return string.Empty;
             }
@@ -40,9 +38,7 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             if (serverStatus == null)
             {
                 const string errorMessage = "WebApi Get: Could not get Server status";
-                _logger.LogError(errorMessage);
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsync(errorMessage);
+                await HandleError(errorMessage);
 
                 return string.Empty;
             }
@@ -56,6 +52,15 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             context.Response.StatusCode = StatusCodes.Status200OK;
 
             return serializedBoxesStatusToJson;
+
+
+
+            async Task HandleError(string errorMessage)
+            {
+                _logger.LogError(errorMessage);
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync(errorMessage);
+            }
         }
 
         private SlingBoxServerStatus? GetSlingBoxServerStatus()
