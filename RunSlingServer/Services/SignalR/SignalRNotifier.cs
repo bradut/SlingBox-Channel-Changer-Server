@@ -179,7 +179,7 @@ namespace RunSlingServer.Services.SignalR
                 return;
             }
 
-           
+
             Connection.Remove("ChannelChanged");
             Connection.On("ChannelChanged",
                 async (ChannelChangedNotification receivedNotification) =>
@@ -234,7 +234,7 @@ namespace RunSlingServer.Services.SignalR
 
 
                 Console.ForegroundColor = newFontColor;
-                Console.WriteLine("-----------------------------------------------");
+                Console.WriteLine("--[SignalR Notifier]---------------------------");
                 Console.WriteLine($"{explanation}");
 
 
@@ -245,24 +245,32 @@ namespace RunSlingServer.Services.SignalR
                             $"SlingBox: {cc.SlingBoxName}  New channel: {cc.NewChannelNumber}  Event origin: {cc.EventOrigin}  TimeStamp {cc.Timestamp}");
                         break;
 
-                    case StreamingStoppedNotification ss:
-                        Console.WriteLine(
-                            $"SlingBox: {ss.SlingBoxName}  Event origin: {ss.EventOrigin} TimeStamp {ss.Timestamp}");
-                        break;
+                    //case StreamingStoppedNotification ss:
+                    //    Console.WriteLine(
+                    //        $"SlingBox: {ss.SlingBoxName}  Event origin: {ss.EventOrigin} TimeStamp {ss.Timestamp}");
+                    //    break;
 
-                    case StreamingInProgressNotification si:
-                        Console.WriteLine(
-                            $"SlingBox: {si.SlingBoxName}  Event origin: {si.EventOrigin} TimeStamp {si.Timestamp}");
-                        break;
+                    //case StreamingInProgressNotification si:
+                    //    Console.WriteLine(
+                    //        $"SlingBox: {si.SlingBoxName}  Event origin: {si.EventOrigin} TimeStamp {si.Timestamp}");
+                    //    break;
 
-                    case SlingBoxBrickedNotification sb:
-                        Console.WriteLine(
-                            $"SlingBox: {sb.SlingBoxName}  Event origin: {sb.EventOrigin} TimeStamp {sb.Timestamp}");
-                        break;
+                    //case SlingBoxBrickedNotification sb:
+                    //    Console.WriteLine(
+                    //        $"SlingBox: {sb.SlingBoxName}  Event origin: {sb.EventOrigin} TimeStamp {sb.Timestamp}");
+                    //    break;
 
-                    case RemoteLockedNotification rl:
+                    //case RemoteLockedNotification rl:
+                    //    Console.WriteLine(
+                    //       $"SlingBox: {rl.SlingBoxName}  Event origin: {rl.EventOrigin} TimeStamp {rl.Timestamp}");
+                    //    break;
+
+                    case StreamingStoppedNotification _:
+                    case StreamingInProgressNotification _:
+                    case SlingBoxBrickedNotification _:
+                    case RemoteLockedNotification _:
                         Console.WriteLine(
-                           $"SlingBox: {rl.SlingBoxName}  Event origin: {rl.EventOrigin} TimeStamp {rl.Timestamp}");
+                            $"SlingBox: {notification.SlingBoxName}  Event origin: {notification.EventOrigin} TimeStamp {notification.Timestamp}");
                         break;
 
                     default:
@@ -284,7 +292,8 @@ namespace RunSlingServer.Services.SignalR
                 Console.ForegroundColor = isError
                 ? ConsoleColor.Red
                 : ConsoleColor.Blue;
-                Console.WriteLine("-----------------------------------------------");
+
+                Console.WriteLine("--[SignalR Notifier]---------------------------");
                 Console.WriteLine($"{message}");
                 Console.WriteLine("-----------------------------------------------");
                 Console.ForegroundColor = fontColor;

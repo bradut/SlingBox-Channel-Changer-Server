@@ -23,7 +23,7 @@ namespace RunSlingServer.WebApi.Services
                              ConsoleDisplayDispatcher console,
                              IFileSystemAccess fileSystemAccess,
                              SignalRNotifier? signalRNotifier,
-                             ILogger logger 
+                             ILogger logger
                              )
         {
             _args = args;
@@ -46,10 +46,10 @@ namespace RunSlingServer.WebApi.Services
         private WebApplication CreateApplication(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             var environmentName = builder.Environment.EnvironmentName;
             var developmentFileName = $"appsettings.{environmentName}.json";
-            
+
             var configuration = new ConfigurationBuilder()
             .SetBasePath(_serverRootPath)
             .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
@@ -71,14 +71,6 @@ namespace RunSlingServer.WebApi.Services
                         // Configure the Http endpoint, if needed.
                     });
                 }
-
-                //if (!string.IsNullOrEmpty(httpsUrl))
-                //{
-                //    serverOptions.ListenAnyIP(int.Parse(httpsUrl.Split(':')[2]), _ =>
-                //    {
-
-                //    });
-                //}
 
                 if (!string.IsNullOrEmpty(httpsUrl))
                 {
@@ -130,14 +122,14 @@ namespace RunSlingServer.WebApi.Services
             services.AddSignalR();
 
             services.AddSingleton<IWebHelpers, WebHelpers>();
-         
+
             services.AddSingleton<IPostToUrlHandler, PostToUrlHandler>(serviceProvider =>
              {
-                    var consoleDisplayDispatcher = serviceProvider.GetRequiredService<ConsoleDisplayDispatcher>();
-                    var webHelper = serviceProvider.GetRequiredService<IWebHelpers>();
+                 var consoleDisplayDispatcher = serviceProvider.GetRequiredService<ConsoleDisplayDispatcher>();
+                 var webHelper = serviceProvider.GetRequiredService<IWebHelpers>();
 
-                    return new PostToUrlHandler(consoleDisplayDispatcher, _fileSystemAccess, _signalRNotifier, _logger, webHelper);
-            });
+                 return new PostToUrlHandler(consoleDisplayDispatcher, _fileSystemAccess, _signalRNotifier, _logger, webHelper);
+             });
 
             services.AddSingleton<IGetStreamingStatusHandler, GetStreamingStatusHandler>(serviceProvider =>
             {
@@ -146,7 +138,7 @@ namespace RunSlingServer.WebApi.Services
                 return new GetStreamingStatusHandler(consoleDisplayDispatcher, _fileSystemAccess, _logger);
             });
 
-           
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSignalR",
@@ -206,7 +198,7 @@ namespace RunSlingServer.WebApi.Services
 
 
 
-                endpoints.MapPost("/api/post-to-url", 
+                endpoints.MapPost("/api/post-to-url",
                     async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
                 {
                     return await postToUrlHandler.HandlePostToUrl(request);

@@ -1,12 +1,9 @@
-﻿using Domain.Helpers;
+﻿using Application.Abstractions;
+using Application.Interfaces;
+using Domain.Helpers;
 using Domain.Models;
 using Microsoft.Extensions.Primitives;
-using RunSlingServer.Helpers;
-using Domain;
-using RunSlingServer.Services;
 using RunSlingServer.WebApi.Services.Interfaces;
-using Application.Abstractions;
-using Application.Interfaces;
 
 
 namespace RunSlingServer.WebApi.Services.EndpointsServices
@@ -39,10 +36,10 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
                 return string.Empty;
             }
 
-            var serverStatus = _fileSystemAccess.LoadSlingBoxServerStatusFromFile();
+            var serverStatus = GetSlingBoxServerStatus();
             if (serverStatus == null)
             {
-                const string errorMessage = "WebApi Get: Server status could not be loaded";
+                const string errorMessage = "WebApi Get: Could not get Server status";
                 _logger.LogError(errorMessage);
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsync(errorMessage);
@@ -59,6 +56,20 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             context.Response.StatusCode = StatusCodes.Status200OK;
 
             return serializedBoxesStatusToJson;
+        }
+
+        private SlingBoxServerStatus? GetSlingBoxServerStatus()
+        {
+            try
+            {
+                var serverStatus = _fileSystemAccess.LoadSlingBoxServerStatusFromFile();
+                return serverStatus;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"WebApi Get: Error loading server status from file: {ex.Message}");
+                return null;
+            }
         }
 
 
