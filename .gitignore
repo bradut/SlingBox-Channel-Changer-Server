@@ -378,3 +378,4 @@ FodyWeavers.xsd
 /RunSlingServer/config_org.ini
 /RunSlingServer/config.ini
 /RunSlingServer/*.ini
+/RunSlingServer/*_org.*

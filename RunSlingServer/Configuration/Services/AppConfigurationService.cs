@@ -46,8 +46,7 @@ namespace RunSlingServer.Configuration.Services
             if (!File.Exists(AppSettingsConfigFileName))
             {
                 var appSettings = new AppConfiguration();
-                SetSlingerConfigFileNameAsParameter(appSettings);
-
+                SetAppSettingsDefaultValues(appSettings);
                 SaveConfiguration(appSettings);
 
                 _logger.LogInformation("Created the appsettings.json file with default values");
@@ -124,9 +123,30 @@ namespace RunSlingServer.Configuration.Services
                 }
             };
 
-     
+
             return _appSettings;
         }
+
+
+        private void SetAppSettingsDefaultValues(AppConfiguration appSettings)
+        {
+            appSettings.AppSettings.SlingboxServer.ExecutableName = "slingbox_server.exe";
+            //appSettings.AppSettings.SlingboxServer.Arguments = new[] { "config.ini" };
+            SetSlingerConfigFileNameAsParameter(appSettings);
+
+            appSettings.AppSettings.TvGuide.TvGuideUrl = "http://localhost:80/TvGuideWebSite/TvGuide.html";
+            appSettings.AppSettings.TvGuide.SlingRemoteControlUrl = "http://localhost:5196/api/post-to-url";
+
+            //appSettings.AppSettings.Logging.LogLevel.Default = "Information";
+            //appSettings.AppSettings.Logging.LogLevel.MicrosoftAspNetCore = "Warning";
+            //appSettings.AppSettings.Logging.LogFilePath = "logs/log-channel-change-{Date}.txt";
+
+            //appSettings.AppSettings.AllowedHosts = "*";
+
+            //appSettings.AppSettings.Kestrel.Endpoints.Http.Url = "http://localhost:5196";
+            //appSettings.AppSettings.Kestrel.Endpoints.Https.Url = null; //"https://localhost:7064"// Leave null to avoid SLL certificate issues
+        }
+
 
         private void SetSlingerConfigFileNameAsParameter(AppConfiguration appSettings)
         {
@@ -138,7 +158,7 @@ namespace RunSlingServer.Configuration.Services
                     return;
                 }
             }
-            
+
             if (File.Exists("config.ini"))
             {
                 appSettings.AppSettings.SlingboxServer.Arguments = new[] { "config.ini" };

@@ -1,8 +1,8 @@
-﻿using System.Text;
+﻿using RunSlingServer.Configuration.Services;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using RunSlingServer.Configuration.Services;
 
 namespace RunSlingServer.Configuration.Models
 {
@@ -21,8 +21,42 @@ namespace RunSlingServer.Configuration.Models
     [JsonSerializable(typeof(TvGuideSettings))]
     public class TvGuideSettings
     {
-        public string TvGuideUrl { get; set; } = "http://localhost:80/TvGuideWebSite/TvGuide.html";
-        public string SlingRemoteControlUrl { get; set; } = "http://localhost:5196/api/post-to-url";
+        private string _tvGuideUrl = string.Empty;
+
+        public string TvGuideUrl
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_tvGuideUrl))
+                    throw new ArgumentNullException($"{nameof(TvGuideUrl)} cannot be empty");
+                return _tvGuideUrl;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentNullException($"{nameof(TvGuideUrl)} cannot be empty");
+                _tvGuideUrl = value;
+            }
+        }
+
+
+        private string _slingRemoteControlUrl = string.Empty;
+
+        public string SlingRemoteControlUrl
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_slingRemoteControlUrl))
+                    throw new ArgumentNullException($"{nameof(SlingRemoteControlUrl)} cannot be empty");
+                return _slingRemoteControlUrl;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentNullException($"{nameof(SlingRemoteControlUrl)} cannot be empty");
+                _slingRemoteControlUrl = value;
+            }
+        }
     }
 
     [JsonSerializable(typeof(AppSettings))]
@@ -117,7 +151,6 @@ namespace RunSlingServer.Configuration.Models
             get => AppSettings.Version;
             set => AppSettings.Version = value;
         }
-
 
         public AppSettings AppSettings { get; set; } = new();
 
