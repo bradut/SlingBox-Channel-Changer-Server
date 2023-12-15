@@ -42,7 +42,10 @@ namespace RunSlingServer.Services.SignalR
 
             if (Connection is null)
             {
-                await DisplayMessageAsync($"{nameof(NotifyClients)}(): SignalR connection is null", true);
+                var errMsg = $"{nameof(NotifyClients)}(): SignalR connection is null";
+                _logger?.LogError(errMsg);
+                await DisplayMessageAsync(errMsg, true);
+
                 return;
             }
 
@@ -64,11 +67,13 @@ namespace RunSlingServer.Services.SignalR
                 }
                 catch (Exception ex)
                 {
+                    _logger?.LogError(ex, $"Error notifying others about {notification.SignalRClientMethodName}, {notification.SlingBoxName}");
                     await DisplayMessageAsync(ex.Message, true);
                 }
             }
             else
             {
+                _logger?.LogError($"SignalR: Connection is NOT Connected: {Connection.State}");
                 await DisplayMessageAsync($"{nameof(NotifyClients)}(): SignalR connection is NOT Connected: {Connection.State}");
             }
         }
@@ -116,8 +121,7 @@ namespace RunSlingServer.Services.SignalR
 
             await CreateConnection(cancellationToken);
             return;
-
-
+            
 
             async Task CreateConnection(CancellationToken cancelToken)
             {
@@ -156,7 +160,6 @@ namespace RunSlingServer.Services.SignalR
 
             string GenerateDisplayErrMsg(Exception ex)
             {
-
                 var displayErrMsg = $"SignalR: Error creating connection to '{HubEndpoint}'.\n\n" +
 
                                     "This server will not be able to communicate with with the channel-changer TV Guide.\n\n" +
@@ -170,12 +173,11 @@ namespace RunSlingServer.Services.SignalR
 
         private void RegisterConnectionEventHandlers()
         {
-
             if (Connection == null)
             {
                 _logger?.LogError("SignalR: Connection is null");
-
                 DisplayMessageAsync("SignalR: Connection is null", true).GetAwaiter().GetResult();
+
                 return;
             }
 
@@ -186,16 +188,14 @@ namespace RunSlingServer.Services.SignalR
                 {
                     await DisplayNotificationInfo(receivedNotification, true);
                 });
-
-
+            
             Connection.Remove("StreamingInProgress");
             Connection.On("StreamingInProgress",
                 async (StreamingInProgressNotification receivedNotification) =>
                 {
                     await DisplayNotificationInfo(receivedNotification, true);
                 });
-
-
+            
             Connection.Remove("StreamingStopped");
             Connection.On("StreamingStopped",
                 async (StreamingStoppedNotification receivedNotification) =>
@@ -232,11 +232,9 @@ namespace RunSlingServer.Services.SignalR
                     ? $"Received notification: {notification.SignalRClientMethodName}, {notification.SlingBoxName}:"
                     : $"Will notify others: {notification.SignalRClientMethodName}, {notification.SlingBoxName}:";
 
-
                 Console.ForegroundColor = newFontColor;
                 Console.WriteLine("--[SignalR Notifier]---------------------------");
                 Console.WriteLine($"{explanation}");
-
 
                 switch (notification)
                 {
