@@ -101,7 +101,8 @@ namespace RunSlingServer.WebApi.Services
             var webApplication = builder.Build();
 
             // Apply the startup class Configure
-            Configure(app: webApplication, env: webApplication.Environment, logger: webApplication.Services.GetService<ILogger<WebApiService>>()!);
+            Configure(app: webApplication, env: webApplication.Environment, logger: _logger);
+
 
             return webApplication;
         }
@@ -131,11 +132,9 @@ namespace RunSlingServer.WebApi.Services
                  return new PostToUrlHandler(consoleDisplayDispatcher, _fileSystemAccess, _signalRNotifier, _logger, webHelper);
              });
 
-            services.AddSingleton<IGetStreamingStatusHandler, GetStreamingStatusHandler>(serviceProvider =>
+            services.AddSingleton<IGetStreamingStatusHandler, GetStreamingStatusHandler>(_ =>
             {
-                var consoleDisplayDispatcher = serviceProvider.GetRequiredService<ConsoleDisplayDispatcher>();
-
-                return new GetStreamingStatusHandler(consoleDisplayDispatcher, _fileSystemAccess, _logger);
+                return new GetStreamingStatusHandler(_fileSystemAccess, _logger);
             });
 
 
@@ -155,7 +154,7 @@ namespace RunSlingServer.WebApi.Services
         }
 
         // Configure registered services above
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<WebApiService> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger logger)
         {
             _logger = logger;
 
@@ -202,7 +201,6 @@ namespace RunSlingServer.WebApi.Services
                     async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
                 {
                     return await postToUrlHandler.HandlePostToUrl(request);
-
                 });
 
 

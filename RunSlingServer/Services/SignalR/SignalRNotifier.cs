@@ -245,26 +245,6 @@ namespace RunSlingServer.Services.SignalR
                             $"SlingBox: {cc.SlingBoxName}  New channel: {cc.NewChannelNumber}  Event origin: {cc.EventOrigin}  TimeStamp {cc.Timestamp}");
                         break;
 
-                    //case StreamingStoppedNotification ss:
-                    //    Console.WriteLine(
-                    //        $"SlingBox: {ss.SlingBoxName}  Event origin: {ss.EventOrigin} TimeStamp {ss.Timestamp}");
-                    //    break;
-
-                    //case StreamingInProgressNotification si:
-                    //    Console.WriteLine(
-                    //        $"SlingBox: {si.SlingBoxName}  Event origin: {si.EventOrigin} TimeStamp {si.Timestamp}");
-                    //    break;
-
-                    //case SlingBoxBrickedNotification sb:
-                    //    Console.WriteLine(
-                    //        $"SlingBox: {sb.SlingBoxName}  Event origin: {sb.EventOrigin} TimeStamp {sb.Timestamp}");
-                    //    break;
-
-                    //case RemoteLockedNotification rl:
-                    //    Console.WriteLine(
-                    //       $"SlingBox: {rl.SlingBoxName}  Event origin: {rl.EventOrigin} TimeStamp {rl.Timestamp}");
-                    //    break;
-
                     case StreamingStoppedNotification _:
                     case StreamingInProgressNotification _:
                     case SlingBoxBrickedNotification _:

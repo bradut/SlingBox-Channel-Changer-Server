@@ -1,5 +1,4 @@
 using Application.Abstractions;
-using Application.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -21,9 +20,8 @@ namespace UnitTests.Application.WebAPITests
         {
             _fileSystemAccessMock = new Mock<IFileSystemAccess>();
             Mock<ILogger> loggerMock = new();
-            Mock<IConsoleDisplayDispatcher> consoleMock = new();
-
-            _getStreamingStatusHandler = new GetStreamingStatusHandler(consoleMock.Object, _fileSystemAccessMock.Object, loggerMock.Object);
+ 
+            _getStreamingStatusHandler = new GetStreamingStatusHandler(_fileSystemAccessMock.Object, loggerMock.Object);
         }
 
         [Fact]
@@ -47,7 +45,6 @@ namespace UnitTests.Application.WebAPITests
             // Assert
             Assert.Contains(slingBoxName, result);
             _fileSystemAccessMock.Verify(f => f.LoadSlingBoxServerStatusFromFile(), Times.Once);
-
         }
 
     }
