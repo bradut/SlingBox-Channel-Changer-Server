@@ -1,78 +1,76 @@
-﻿using RunSlingServer.Configuration;
-using RunSlingServer.Configuration.Models;
+﻿using RunSlingServer.Configuration.Models;
 using RunSlingServer.Configuration.Services;
-using RunSlingServer.Services;
 
-namespace UnitTests.Application.ConsoleServicesTests
+namespace UnitTests.Application.ConsoleServicesTests;
+
+public class SlingerConfigParserTests
 {
-    public class SlingerConfigParserTests
+
+    [Fact]
+    public void Parse_ConfigIniFileData_ReturnsSlingBoxConfiguration()
     {
+        // Arrange
+        var sut = new SlingerConfigurationParser("");
+        var configBody = OriginalConfigIniDataWithASingleSlingBox;
 
-        [Fact]
-        public void Parse_ConfigIniFileData_ReturnsSlingBoxConfiguration()
-        {
-            // Arrange
-            var sut = new SlingerConfigurationParser("");
-            var configBody = OriginalConfigIniDataWithASingleSlingBox;
+        // Act
+        var config = sut.Parse(configBody);
 
-            // Act
-            var config = sut.Parse(configBody);
+        // Assert
+        Assert.Equal(1, config.SlingBoxesCount);
+        Assert.Equal(8080, config.Port);
+        Assert.Empty(config.UrlBase);
+        Assert.Equal(10, config.MaxRemoteStreams);
 
-            // Assert
-            Assert.Equal(1, config.SlingBoxesCount);
-            Assert.Equal(8080, config.Port);
-            Assert.Empty(config.UrlBase);
-            Assert.Equal(10, config.MaxRemoteStreams);
+        var keyValuePair = config.SlingBoxes.FirstOrDefault();
+        var slingBoxConfiguration = keyValuePair.Value;
 
-            var keyValuePair = config.SlingBoxes.FirstOrDefault();
-            var slingBoxConfiguration = keyValuePair.Value;
-
-            Assert.NotNull(slingBoxConfiguration);
-            Assert.Equal("SlingBox1", slingBoxConfiguration.SlingBoxName);
-            Assert.Equal("Solo/Pro/ProHD", slingBoxConfiguration.SlingBoxType);
-            Assert.Equal(0, slingBoxConfiguration.VideoSource);
-            Assert.True(slingBoxConfiguration.IsAnalogue);
-        }
+        Assert.NotNull(slingBoxConfiguration);
+        Assert.Equal("SlingBox1", slingBoxConfiguration.SlingBoxName);
+        Assert.Equal("Solo/Pro/ProHD", slingBoxConfiguration.SlingBoxType);
+        Assert.Equal(0, slingBoxConfiguration.VideoSource);
+        Assert.True(slingBoxConfiguration.IsAnalogue);
+    }
 
 
-        [Fact]
-        public void Parse_Unified_ConfigFileData_ReturnsMultipleSlingBoxesConfiguration()
-        {
-            // Arrange
-            var sut = new SlingerConfigurationParser("");
-            var configBody = UnifiedConfigIniDataWithMultipleSlingBoxes;
+    [Fact]
+    public void Parse_Unified_ConfigFileData_ReturnsMultipleSlingBoxesConfiguration()
+    {
+        // Arrange
+        var sut = new SlingerConfigurationParser("");
+        var configBody = UnifiedConfigIniDataWithMultipleSlingBoxes;
 
-            // Act
-            var config = sut.Parse(configBody);
+        // Act
+        var config = sut.Parse(configBody);
 
-            // Assert
-            Assert.Equal(3, config.SlingBoxesCount);
-            Assert.Equal(12345, config.Port);
-            Assert.Equal("secret1234", config.UrlBase);
-            Assert.Equal(5, config.MaxRemoteStreams);
+        // Assert
+        Assert.Equal(3, config.SlingBoxesCount);
+        Assert.Equal(12345, config.Port);
+        Assert.Equal("secret1234", config.UrlBase);
+        Assert.Equal(5, config.MaxRemoteStreams);
 
-            KeyValuePair<string, SlingBoxConfiguration> keyValuePair = config.SlingBoxes.FirstOrDefault();
-            var slingConfig = keyValuePair.Value;
+        KeyValuePair<string, SlingBoxConfiguration> keyValuePair = config.SlingBoxes.FirstOrDefault();
+        var slingConfig = keyValuePair.Value;
 
-            Assert.NotNull(slingConfig);
-            Assert.Equal("slingbox1", slingConfig.SlingBoxName);
-            Assert.Equal("sb1", slingConfig.SlingBoxId);
-            Assert.Equal("Solo/Pro/ProHD", slingConfig.SlingBoxType);
-            Assert.Equal(1, slingConfig.VideoSource);
-            Assert.Equal("remote.txt", slingConfig.RemoteControlFileName);
-            Assert.False(slingConfig.IsAnalogue);
+        Assert.NotNull(slingConfig);
+        Assert.Equal("slingbox1", slingConfig.SlingBoxName);
+        Assert.Equal("sb1", slingConfig.SlingBoxId);
+        Assert.Equal("Solo/Pro/ProHD", slingConfig.SlingBoxType);
+        Assert.Equal(1, slingConfig.VideoSource);
+        Assert.Equal("remote.txt", slingConfig.RemoteControlFileName);
+        Assert.False(slingConfig.IsAnalogue);
 
 
-            keyValuePair = config.SlingBoxes.Single(kv => kv.Key == "slingbox2");
-            slingConfig = keyValuePair.Value;
-            Assert.True(slingConfig.IsAnalogue);
-        }
+        keyValuePair = config.SlingBoxes.Single(kv => kv.Key == "slingbox2");
+        slingConfig = keyValuePair.Value;
+        Assert.True(slingConfig.IsAnalogue);
+    }
 
 
 
 
 
-        private const string UnifiedConfigIniDataWithMultipleSlingBoxes = @"
+    private const string UnifiedConfigIniDataWithMultipleSlingBoxes = @"
 ; This a sample of a unified config.ini for three slingboxes
 
 ;--[ Changinng channels in the textbox------------------------------------------
@@ -205,7 +203,7 @@ enableremote=yes
 
 
 
-        private const string OriginalConfigIniDataWithASingleSlingBox = @"
+    private const string OriginalConfigIniDataWithASingleSlingBox = @"
 [SLINGBOX]
 ;sbtype=""350/500/M1/M2""
 sbtype=""Solo/Pro/ProHD""
@@ -285,5 +283,5 @@ code=1
 ; use the supplied remote.txt as a starting point.
 include=remote.txt 
 ";
-    }
 }
+

@@ -368,6 +368,12 @@ namespace Application.Services
             }
 
             var slingBoxName = segments[0];
+
+            if (!string.IsNullOrWhiteSpace(slingBoxName))
+            {
+                slingBoxName = slingBoxName.Replace(".", "");
+            }
+
             return slingBoxName;
         }
 
@@ -387,6 +393,11 @@ namespace Application.Services
             }
 
             var slingBoxName = segments[1];
+
+            if (!string.IsNullOrWhiteSpace(slingBoxName))
+            {
+                slingBoxName = slingBoxName.Replace(".", "");
+            }
 
             return slingBoxName;
         }
@@ -412,6 +423,12 @@ namespace Application.Services
             }
 
             var slingBoxName = segments[2];
+
+            if (!string.IsNullOrWhiteSpace(slingBoxName))
+            {
+                slingBoxName = slingBoxName.Replace(".", "");
+            }
+
             return slingBoxName;
         }
 

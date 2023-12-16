@@ -1,5 +1,8 @@
 ﻿namespace UnitTests.Application.ConsoleServicesTests;
 
+/// <summary>
+/// This class holds the test data for the test cases in <see cref="ConsoleServicesTests"/>
+/// </summary>
 public class LogEntries4DigitalTunerTestData : TheoryData<string, string, int, string>
 {
     public LogEntries4DigitalTunerTestData()

@@ -1,5 +1,7 @@
 ﻿using Application.Abstractions;
+using Application.Interfaces;
 using Application.Services;
+using Microsoft.AspNetCore.OutputCaching;
 using RunSlingServer.Services.SignalR;
 using RunSlingServer.WebApi.Services.EndpointsServices;
 using RunSlingServer.WebApi.Services.Interfaces;
@@ -122,19 +124,29 @@ namespace RunSlingServer.WebApi.Services
 
             services.AddSignalR();
 
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>(); // ToDo: unify with ConsoleAppDependencyInjection.cs
+
             services.AddSingleton<IWebHelpers, WebHelpers>();
 
             services.AddSingleton<IPostToUrlHandler, PostToUrlHandler>(serviceProvider =>
              {
                  var consoleDisplayDispatcher = serviceProvider.GetRequiredService<ConsoleDisplayDispatcher>();
                  var webHelper = serviceProvider.GetRequiredService<IWebHelpers>();
+                 var dateTimeProvider = serviceProvider.GetRequiredService<IDateTimeProvider>();
 
-                 return new PostToUrlHandler(consoleDisplayDispatcher, _fileSystemAccess, _signalRNotifier, _logger, webHelper);
+                 return new PostToUrlHandler(consoleDisplayDispatcher, _fileSystemAccess, _signalRNotifier, _logger, webHelper, dateTimeProvider);
              });
 
             services.AddSingleton<IGetStreamingStatusHandler, GetStreamingStatusHandler>(_ =>
             {
                 return new GetStreamingStatusHandler(_fileSystemAccess, _logger);
+            });
+
+            services.AddOutputCache(options =>
+            {
+                options.AddBasePolicy(policy => policy.Expire(TimeSpan.FromSeconds(1)));
+                options.AddPolicy("Expire1.5", builder =>
+                    builder.Expire(TimeSpan.FromSeconds(1.5)));
             });
 
 
@@ -189,7 +201,7 @@ namespace RunSlingServer.WebApi.Services
             {
 
                 // API endpoints
-                endpoints.MapGet("/api/streamingstatus",
+                endpoints.MapGet("/api/streamingstatus", [OutputCache(PolicyName = "Expire1.5")]
                 async Task<string> (HttpContext context, IGetStreamingStatusHandler streamingStatusService) =>
                 {
                     return await streamingStatusService.GetStreamingStatus(context);

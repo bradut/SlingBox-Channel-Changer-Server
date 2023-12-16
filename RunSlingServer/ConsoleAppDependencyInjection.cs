@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Application.Interfaces;
 using Application.Services;
 using Infrastructure.FileAccess;
 using RunSlingServer.Configuration;
@@ -35,6 +36,8 @@ namespace RunSlingServer
 
             Services.AddSingleton<AppConfigurationService>();
             Services.AddSingleton<IAppConfiguration>(sp => sp.GetRequiredService<AppConfigurationService>().LoadAndUpdateConfiguration());
+
+            Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
            
             Services.AddSingleton<SlingerServerRunner>();
 

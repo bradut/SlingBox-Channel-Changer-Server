@@ -1,11 +1,10 @@
-﻿using Domain.Models;
-using RunSlingServer.Services;
-using RunSlingServer.WebApi.Services.Interfaces;
-using System.Text;
+﻿using Application.Abstractions;
+using Application.Interfaces;
 using Application.SignalRServices;
 using Application.SignalRServices.Notifications;
-using Application.Abstractions;
-using Application.Interfaces;
+using Domain.Models;
+using RunSlingServer.WebApi.Services.Interfaces;
+using System.Text;
 
 
 namespace RunSlingServer.WebApi.Services.EndpointsServices
@@ -21,8 +20,12 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
         private readonly ISignalRNotifier? _signalRNotifier;
         private readonly ILogger _logger;
         private readonly IWebHelpers _webHelper;
+        private readonly IDateTimeProvider _dateTimeProvider;
+        public int MinDelayDigitalSec { get; }
 
-        public PostToUrlHandler(IConsoleDisplayDispatcher console, IFileSystemAccess fileSystemAccess, ISignalRNotifier? signalRNotifier, ILogger logger, IWebHelpers webHelper)
+        public PostToUrlHandler(IConsoleDisplayDispatcher console, IFileSystemAccess fileSystemAccess,
+            ISignalRNotifier? signalRNotifier, ILogger logger, IWebHelpers webHelper,
+            IDateTimeProvider dateTimeProvider, int minDelayDigitalSec = 6)
         {
             _console = console;
             _fileSystemAccess = fileSystemAccess;
@@ -30,6 +33,8 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
 
             _logger = logger;
             _webHelper = webHelper;
+            _dateTimeProvider = dateTimeProvider;
+            MinDelayDigitalSec = minDelayDigitalSec;
         }
 
         public async Task<string> HandlePostToUrl(HttpRequest request)
@@ -40,7 +45,8 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
 
             if (!isValidUrl || uriAddress == null)
             {
-                await DisplayMessage(errorMessage, true); _logger.LogError(errorMessage);
+                await DisplayMessage(errorMessage, true);
+                _logger.LogError(errorMessage);
                 request.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
                 return await Task.FromResult(errorMessage);
@@ -51,7 +57,7 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             const string digitsKey = "Digits";
             var keyValuePairs = await WebHelpers.GetSlingChannelChangeDataFromRequest(request);
             var channelNumber = keyValuePairs.FirstOrDefault(kv =>
-                                                    string.Equals(kv.Key, digitsKey, StringComparison.CurrentCultureIgnoreCase)).Value;
+                string.Equals(kv.Key, digitsKey, StringComparison.CurrentCultureIgnoreCase)).Value;
 
             await DisplayAndLogChannelChangeRequest(slingBoxName, channelNumber, clientIp);
 
@@ -66,26 +72,28 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
                 return await Task.FromResult(errorMessage);
             }
 
-            var msg = $"WebApi Post: SlingBox '{slingBoxName}' found, current channel {slingBoxStatus.CurrentChannelNumber}";
+            var msg =
+                $"WebApi Post: SlingBox '{slingBoxName}' found, current channel {slingBoxStatus.CurrentChannelNumber}";
             await DisplayMessage(msg);
             _logger.LogInformation(msg);
 
             // Append "." to channel number if the SlingBox uses an analog tuner
-            channelNumber = UpdateChannelNumberWithAnalogueSetting(slingBoxStatus, channelNumber, keyValuePairs, digitsKey);
+            channelNumber =
+                UpdateChannelNumberWithAnalogueDigitalSetting(slingBoxStatus, channelNumber, keyValuePairs, digitsKey);
 
             var url = uriAddress.ToString();
 
-
+            await DelayDigitalTunerAsync(slingBoxStatus);
 
             // This response contains the HTML remote control form from slingbox server.
             // If the MAGIC STRING 'Status:%s' is included in the form, it will include server status.
             var postResponse = await _webHelper.PostToSlingerServer(url, keyValuePairs, request, _logger);
 
-
             if (IsResponseError(out var statusCode))
             {
                 var inputData = GetRequestBody();
-                errorMessage = $"WebApi Post: SlingBox {slingBoxName} returned error: {postResponse}.\n Input data {inputData}";
+                errorMessage =
+                    $"WebApi Post: SlingBox {slingBoxName} returned error: {postResponse}.\n Input data {inputData}";
                 await DisplayMessage(errorMessage, true);
                 _logger.LogError(errorMessage);
 
@@ -98,7 +106,8 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             if (string.IsNullOrWhiteSpace(postResponse))
             {
                 var inputData = GetRequestBody();
-                errorMessage = $"WebApi Post: SlingBox {slingBoxName} not responding or not found in status file.\n Input data {inputData}";
+                errorMessage =
+                    $"WebApi Post: SlingBox {slingBoxName} not responding or not found in status file.\n Input data {inputData}";
                 await DisplayMessage(errorMessage, true);
                 _logger.LogError(errorMessage);
 
@@ -111,7 +120,8 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             if (IsSlingStopped())
             {
                 msg = $"WebApi Post: SlingBox {slingBoxName} is STOPPED";
-                await DisplayMessage(msg); _logger.LogInformation(msg);
+                await DisplayMessage(msg);
+                _logger.LogInformation(msg);
                 await NotifyStreamingStoppedAsync(slingBoxName);
 
                 _fileSystemAccess.SaveToJsonFile(serverStatus);
@@ -125,7 +135,8 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             if (IsChannelSelected())
             {
                 msg = $"WebApi Post: SlingBox {slingBoxName} already on channel {channelNumber}";
-                await DisplayMessage(msg); _logger.LogInformation(msg);
+                await DisplayMessage(msg);
+                _logger.LogInformation(msg);
 
                 return await Task.FromResult(msg);
             }
@@ -134,8 +145,29 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
 
             return await Task.FromResult(msg);
 
+            // Digital tuners require a delay between channel changes to avoid mixing up numbers.
+            // Rapidly posting channels, like 700 and 800, without a delay can lead to unintended combinations, such as 7008.
+            async Task DelayDigitalTunerAsync(SlingBoxStatus slingBoxStatusBeforePost)
+            {
 
+                if (slingBoxStatusBeforePost.IsAnalogue)
+                    return;
 
+                var lastHeartBeatTimeStamp = slingBoxStatusBeforePost.LastHeartBeatTimeStamp;
+                if (lastHeartBeatTimeStamp == null)
+                    return;
+
+                var secondsSinceLastHeartBeat =
+                    (int)_dateTimeProvider.Now.Subtract(lastHeartBeatTimeStamp.Value).TotalSeconds;
+                var secondsToWait = MinDelayDigitalSec - secondsSinceLastHeartBeat;
+
+                if (secondsToWait <= 0)
+                    return;
+
+                _logger.LogInformation(
+                    $"WebApi Post: Waiting {secondsToWait} seconds to post to SlingBox {slingBoxName} channel {channelNumber}.");
+                await Task.Delay((secondsToWait + 1) * 1000);
+            }
 
             string GetRequestBody()
             {
@@ -193,7 +225,11 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
         }
 
 
-        private static string UpdateChannelNumberWithAnalogueSetting(SlingBoxStatus slingBoxStatus, string channelNumber, IDictionary<string, string> keyValuePairs, string digitsKey)
+        private static string UpdateChannelNumberWithAnalogueDigitalSetting(
+            SlingBoxStatus slingBoxStatus,
+            string channelNumber,
+            IDictionary<string, string> keyValuePairs,
+            string digitsKey)
         {
             if (string.IsNullOrWhiteSpace(channelNumber))
                 return string.Empty;
@@ -207,31 +243,37 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
                  *  - In the UK just put in the channel number with a decimal 101.
                  */
 
-                if (channelNumber.Count(c => c == '.') == 1 && !channelNumber.StartsWith("."))
-                    return channelNumber;
+                if (channelNumber.Count(c => c == '.') != 1 || channelNumber.StartsWith("."))
+                {
+                    channelNumber = channelNumber.Replace(".", "");
+                    channelNumber += ".";
+                }
 
-                channelNumber = channelNumber.Replace(".", "");
-                channelNumber += ".";
                 keyValuePairs[digitsKey] = channelNumber;
+
+                return channelNumber;
             }
             else
             {
-                if (!channelNumber.Contains('.'))
-                    return channelNumber;
+                // Digital tuners accept channel numbers with max 4 digits, without a decimal point
+                // To avoid unintended results when channels are changed in rapid sequence, pad with leading zeros
+                if (channelNumber.Contains('.'))
+                {
+                    channelNumber = channelNumber.Replace(".", "");
+                }
 
-                channelNumber = channelNumber.Replace(".", "");
+                channelNumber = channelNumber.PadLeft(4, '0');
+
                 keyValuePairs[digitsKey] = channelNumber;
-            }
 
-            return channelNumber;
+                return channelNumber;
+            }
         }
 
 
         private async Task DisplayAndLogChannelChangeRequest(string slingBoxName, string channelNumber, string clientIp)
         {
-            string msg;
-            msg =
-                $"WebApi Post: Request channel change for SlingBox '{slingBoxName}', new channel {channelNumber}, from IP {clientIp}";
+            var msg = $"WebApi Post: Request channel change for SlingBox '{slingBoxName}', new channel {channelNumber}, from IP {clientIp}";
             await DisplayMessage(msg);
             _logger.LogInformation(msg);
         }
