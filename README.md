@@ -517,7 +517,7 @@ The file above stores a snapshot of the **`status of the wrapper server`** which
   - `tvGuideUrl`: This setting indicates that the TV Guide URL for a certain slingBox is **different** than the server-wide TV Guide URL (See the explanations about `config.ini`).<br /><be />
     In the example above, the configuration of  **slingbox_1** which has a **digital** video-source:
       - uses the TV Guide with the URL `http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html` 
-      - instead if the server-wide TV Guide for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined at the bottom of the file for all other slingboxes.
+      - instead if the server-wide URL for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined at the bottom of the file for all other slingboxes.
 
 - The server-wide settings in SlingBoxStatus.json are:
   - `urlBase`: From `config.ini` - see Slinger's documentation.
