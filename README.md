@@ -246,7 +246,7 @@ Make these changes in `config.ini`
   - `remote_Analogue_ProHD.html` is an adaptation from `\CustomRemotes\ProHD_Tuner.txt` for use with analog video-sources and automatically adds a dot to the channel number, as indicated in Slinger documentation for analogue tunners.
   - `remote_Digital.html` is an adaptation from `remotes.txt`, where the number buttons have been removed.<br />
 
-- If you want to continue using your current remote controls, you may consider adding a reference to the JS folder and include a few HTML elements in their pages:
+- If you want to continue using your current remote controls, you may consider adding a "TV Guide " button, adding a reference to the JS folder and include a few HTML elements in their pages:
   - (Keep using your remote) Add reference to JS foler
 
 ```js
@@ -537,6 +537,11 @@ This is a .NET Core 7 app compiled as a standalone, self-contained executable. T
 Note: It cannot be upgraded to .NET Core 8 because the new framework does not allow creating such executables capable of communicating with SignalR (as of December 2023).
 
 This is a personal project, and I don't have a lot of time to work on it.
+
+This app originated from two separate projects—one serving as a pass-through for post requests from TV Guide to Slinger, and the other as a Slinger console reader.<br /> 
+After successfully mediating communications between Slinger and TV Guide, these projects were merged into the current one, resulting in certain architectural irregularities.
+
+
 <br />
 <br />
 
