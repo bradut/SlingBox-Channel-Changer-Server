@@ -518,12 +518,13 @@ The file above stores a snapshot of the **`status of the wrapper server`** which
   It will be passsed to the TV Guide so that it wiil be able to communicate back with the Wrapper.<br />
 <br />
 
-**Summary**: The server status values in the file `SlingBoxStatus.json` are kept automatically in sync with:
+**Summary**: The server status values in the file `SlingBoxStatus.json` are automatically synchronized with:
 
-- the settings from configuration files `config.ini` and `appsetting.json` 
-- the events resulted from reading Slinger's console output<br />
+- Settings from configuration files `config.ini` and `appsetting.json` 
+- Events resulted from reading Slinger's console output<br />
 
-Therefore, to modify them, you need to make the changes in these configuration files and **NOT** in `SlingBoxStatus.json`, otherwise they will be overriden.
+Therefore, any modifications should be made in these configuration files and **NOT** in `SlingBoxStatus.json`.<br />
+Otherwise, the changes will be overridden..
 <br />
 <br />
 
@@ -534,14 +535,12 @@ If you want to contribute, please contact me first to discuss the changes.
 
 This is a .NET Core 7 app compiled as a standalone, self-contained executable. Therefore, it does not require .NET to be installed on users' computers.
 
-Note: It cannot be upgraded to .NET Core 8 because the new framework does not allow creating such executables capable of communicating with SignalR (as of December 2023).
+It cannot be upgraded to .NET Core 8 because the new framework does not allow creating such executables capable of communicating with SignalR (as of December 2023).
 
-This is a personal project, and I don't have a lot of time to work on it.
-
-This app originated from two separate projects—one serving as a pass-through for post requests from TV Guide to Slinger, and the other as a Slinger console reader.<br /> 
+This app originated from two separate projects - one serving as a pass-through for post requests from TV Guide to Slinger, and the other as a Slinger console reader.<br /> 
 After successfully mediating communications between Slinger and TV Guide, these projects were merged into the current one, resulting in certain architectural irregularities.
 
-
+This is a personal project, and I don't have a lot of time to work on it.
 <br />
 <br />
 
