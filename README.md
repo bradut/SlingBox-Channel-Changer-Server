@@ -98,13 +98,13 @@ These events are:<br />
   - Slingbox bricked
   - Remote control locked
 - Communicates with the channel-changer SlingBox-TV Guide website to notify about any event and to provide the current wrapper state, so that the UI can indicate the selected channel or display info about server events.
-- accepts change-channel requests from the SlingBox-TV Guide website, and uses them to control the Slinger Server.
+- Accepts change-channel requests from the SlingBox-TV Guide website, and uses them to control the Slinger Server.
 <br />
 <br />
 
 ## Installation
 
-The Sling Server Wrapper is provided as a single Windows-executable file named RunSlingServer.exe that can be downloaded from this repo.<br />
+The Sling Server Wrapper is provided as a single Windows-executable file named `RunSlingServer.exe` that can be downloaded from this repo.<br />
 (Mac and Linux users could probably generate an OS-specific executable, but this has not been tested.)
 
 - It doesn't need to be installed,
@@ -129,15 +129,16 @@ Once the above files are downloaded, you can run the Sling Server Wrapper by dou
 
 At FIRST RUN, the wrapper will:
 
-- Create a configuration file named `appsettings.json` in the same folder where it is located. Initiually, this file contains default settings, among them being Slinger's configuration file: `config.ini`. You may change later these settings as explained below.
-- Read the Slinger configuration file from `appsettings.json`, which initially is `config.ini`.
+- Create a configuration file named `appsettings.json` in the same folder where it is located.<br /> 
+Initially, this file contains default settings, among them being Slinger's configuration file: `config.ini`. You may change later these settings as explained below.
+- Read the Slinger configuration file from `appsettings.json`, which by default is `config.ini`.
 - Read from `config.ini`:
  	- The list of slingboxes, with their names, types and VideoSources
   - Slinger's urlBase and port number
 - Generate the file **`SlingBoxStatus.json`** based on the actions above  
 <br />
 
-Afer the first run, your Slinger folder will look like this:
+After the first run, your Slinger folder will appear as follows (new items highlighted in <span style="color:red;">red</span>):
 <p align="center">
 <img src="./Docs/images/Slinger_and_Wrapper_Directory.jpg" alt="Slinger Wrapper Components" height="500"><br />
 Slinger Wrapper Components: JS, HTML files, RunSlingServer.exe, etc. 
@@ -182,8 +183,8 @@ sb3=sling_3
 [sling_1]
 sbtype="Solo/Pro/ProHD"
 password=admin1    
-ipaddress=192.168.1.254
 
+ipaddress=192.168.1.254
 port=5001
 
 ;valid range = 0..16 
@@ -204,16 +205,17 @@ VideoSmoothness=63
 VideoSource=1
 StartChannel=800   
 ;RemoteLock=yes
-tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html  ;<-- When using a specific TV Guide 
+tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html  <-- When using a specific TV Guide 
 Remote=remote_Digital.html
 
 
 [sling_2]
 sbtype="Solo/Pro/ProHD"
-password=admin2   
-ipaddress=sling2.domain.com
+password=admin2
 
+ipaddress=sling2.domain.com
 port=5002
+
 Resolution=12
 FrameRate=25
 VideoBandwidth=2500
@@ -225,9 +227,10 @@ Remote=remote_Analogue_ProHD.html
 [sling_3]
 sbtype="Solo/Pro/ProHD"
 password=admin3   
-ipaddress=sling2.domain.com
 
+ipaddress=sling2.domain.com
 port=5003
+
 Resolution=12
 FrameRate=25
 VideoBandwidth=2500
@@ -247,18 +250,18 @@ enableremote=yes
 Make these changes in `config.ini`  
 
 - Update the name of the remote control files as `remote_Digital.html` and/or `remote_Analogue_ProHD.html`
-  - `remote_Analogue_ProHD.html` is an adaptation from `\CustomRemotes\ProHD_Tuner.txt` for use with analog video-sources and automatically adds a dot to the channel number, as indicated in Slinger documentation for analogue tunners.
-  - `remote_Digital.html` is an adaptation from `remotes.txt`, where the number buttons have been removed.<br />
+  - `remote_Analogue_ProHD.html` is an adaptation from Slinger project's `\CustomRemotes\ProHD_Tuner.txt` for use with analog video-sources and automatically adds a dot to the channel number, as indicated in Slinger documentation for analogue tunners.
+  - `remote_Digital.html` is an adaptation from Slinger project's `remotes.txt`, where the number buttons have been removed.<br />
 
 - If you want to continue using your current remote controls, you may consider adding a "TV Guide " button, adding a reference to the JS folder and include a few HTML elements in their pages:
-  - (Keep using your remote) Add reference to JS foler
+  - (Keep using your remote:) Add a reference to JS foler
 
 ```js
     <script src="/js/slingerplayer.js"></script>
 ```
 
 -
-  - (Keep using your remote) Include the ID `titleElem` in the title element to be populated automatically with your slingbox name:
+  - (Keep using your remote:) Include the ID `titleElem` in the title element to be populated automatically with your slingbox name:
 
 ```html
   <h2 id="titleElem" class="title" >
@@ -267,7 +270,7 @@ Make these changes in `config.ini`
 ```
 
 -
-  - (Keep using your remote) Include an element contaning "`Status:%s`" string, which will trigger Slinger Server to replace it with its status.<br />
+  - (Keep using your remote:) Include an element contaning "`Status:%s`" string, which will trigger Slinger Server to replace it with its status.<br />
   This element will help SlingBox - TV Guide to know immediately when the slingbox has stopped streaming, otherwise will have to wait for 100 seconds of server inactivity.
 
 ```html
@@ -284,12 +287,12 @@ Make these changes in `config.ini`
 - (Optional) In case some of your slingboxes require a specific TV Guide page, different from the rest, then add the entry 'tvGuidUrl':
 
 ```ini
-tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html    ;<-- Add this if needed
+tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html  <-- When using a specific TV Guide 
 ```
 
 ### Update appsettings.json
 
-After the first run, stop the Wrapper to make a few changes in `appsettings.json`<br />
+After the first run, you will need to stop the Wrapper to make a few changes in `appsettings.json`<br />
 
 The settings in this file are used by the wrapper to configure itself and to communicate with the Slinger Server and the TvGuide web app.<br />
 Some of these settings are committed automatically by the wrapper into the `SlingBoxStatus.json` file.<br />  
@@ -345,7 +348,7 @@ This is the default `appsettings.json` configuration file generated by the wrapp
  },
 ```
 
-- Update the name of the config file passed to Slinger if it is different from **`config.ini`** (example: you may write `unified_config.ini` instead).  
+- Update the name of the config file passed to Slinger if it is different from **`config.ini`** (example: you may write here `unified_config.ini` instead).  
 
 #### Update AppSettings.TvGuide section
 
@@ -398,7 +401,7 @@ Please note that some of the channel-changing buttons in the complex remote cont
 - Page Up /Down
 - ...etc.
 
-Therefore, using these buttons may de-synchronize the Slinger and the Wrapper, resulting on TV Guide displaying different channels as selected.
+Therefore, **using these buttons may cause desynchronization** between Slinger and the Wrapper, leading to TV Guide displaying different selected channels than the actual ones.
 
 #### Update Kestrel section
 
@@ -415,7 +418,8 @@ Therefore, using these buttons may de-synchronize the Slinger and the Wrapper, r
 The wrapper is a Web API application, and it uses the Kestrel web server to listen for requests.<br />
 In this section you can update the port number used by the wrapper.
 
-If you want to use HTTPS, you will need to update the configuration accordingly and you will need to provide a certificate for the wrapper.<br />
+If you want to use HTTPS, you will need to update the configuration accordingly and you will need to provide a **certificate** for the wrapper.
+
 Avoid using HTTPS if your TV Guide web app is not also using HTTPS because some browsers will block the requests from the Wrapper to the web app.<br /> 
 (may work with Chrome, but not with Firefox)
 
@@ -455,7 +459,7 @@ You can update the path and the name of the log file if you want to.<br />
 
 This file stores a simplified form of the `server status`- it contains only values relevant to SlingBox - TV Guide channel changer app.<br />
 It has been created by the Wrapper at first run with information gathered from `config.ini` and `appsettings.json` and will be updated by the Wrapper whenever it detects an event while reading the Slinger's console.<br />
-`Note: Do not modify this file !` <br />
+**Note**: Do not modify this file! <br />
 
 ```json
 {
@@ -484,7 +488,7 @@ It has been created by the Wrapper at first run with information gathered from `
     }
   },
   "urlBase": "myslings",
-  "tvGuideUrl": "http://192.168.1.10/TvGuideWebSite/TvGuide.html",  <-- from appsetting.json
+  "tvGuideUrl": "http://192.168.1.10/TvGuideWebSite/TvGuide.html",        <-- from appsetting.json
   "slingRemoteControlServiceUrl": "http://localhost:5196/api/post-to-url" <-- from appsetting.json
 }
 ```
@@ -510,8 +514,10 @@ The file above stores a snapshot of the **`status of the wrapper server`** which
      The wrapper will automatically change this value to `null` if it is older than 100 seconds, based on the fact that, every 90 second, Slinger display on its console information about each of its slinboxess that are currently streaming.<br />
      The values of this setting can be either `null` or the date-time of the last event in the format `"2023-12-07T18:54:05"`.
 
-  - `tvGuideUrl`: This is an OPTIONAL setting to indicate that the TV Guide URL for a certain slingBox is different than the server-wide TV Guide URL.<br />
-    For example, above is a configuration where **slingbox_1**, having a **digital** video-source, uses the TV Guide with the URL `http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html` instead if the server-wide TV Guide for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined below for all other slingboxes.
+  - `tvGuideUrl`: This setting indicates that the TV Guide URL for a certain slingBox is **different** than the server-wide TV Guide URL (See the explanations about `config.ini`).<br /><be />
+    In the example above, the configuration of  **slingbox_1** which has a **digital** video-source:
+      - uses the TV Guide with the URL `http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html` 
+      - instead if the server-wide TV Guide for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined at the bottom of the file for all other slingboxes.
 
 - The server-wide settings in SlingBoxStatus.json are:
   - `urlBase`: From `config.ini` - see Slinger's documentation.
