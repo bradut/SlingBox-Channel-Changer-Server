@@ -2,7 +2,6 @@
 using Application.Interfaces;
 using Application.Services;
 using Infrastructure.FileAccess;
-using RunSlingServer.Configuration;
 using RunSlingServer.Configuration.Services;
 using RunSlingServer.Services;
 using RunSlingServer.WebApi.Services;
@@ -75,10 +74,10 @@ namespace RunSlingServer
             });
 
 
-            Services.AddSingleton<SlingerConfigurationParser>(serviceProvider =>
+            Services.AddSingleton<ISlingerConfigurationParser>(serviceProvider =>
             {
                 var appConfiguration = serviceProvider.GetRequiredService<IAppConfiguration>();
-                var logger = loggerFactory.CreateLogger<SlingerConfigurationParser>();
+                var logger = loggerFactory.CreateLogger<ISlingerConfigurationParser>();
 
                 return new SlingerConfigurationParser(appConfiguration.SlingBoxServerConfigFileName, logger);
             });

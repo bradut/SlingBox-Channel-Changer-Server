@@ -149,7 +149,6 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
             // Rapidly posting channels, like 700 and 800, without a delay can lead to unintended combinations, such as 7008.
             async Task DelayDigitalTunerAsync(SlingBoxStatus slingBoxStatusBeforePost)
             {
-
                 if (slingBoxStatusBeforePost.IsAnalogue)
                     return;
 
