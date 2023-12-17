@@ -153,7 +153,7 @@ For demo purposes, I created two TV Guides apps on my server:<br />
 <http://tvGuideDigital.dima.mobi/TvGuide.html><br />
 [They **will NOT work for you** because they are configured to work with my Slingbox devices, but you can use them as examples.]
 
-As exaplained, once you run the Sling Server Wrapper for the first time, it will create the files `appsettings.json` and `SlingBoxStatus.json` with **default** settings.<br />
+As explained, once you run the Sling Server Wrapper for the first time, it will create the files `appsettings.json` and `SlingBoxStatus.json` with **default** settings.<br />
 You will then need to modify `appsettings.json` and maybe `config.ini` in order to work with your particular Slinger Server configuration.
 
 ### Update config.ini
@@ -246,7 +246,7 @@ Make these changes in `config.ini`
   - `remote_Analogue_ProHD.html` is an adaptation from `\CustomRemotes\ProHD_Tuner.txt` for use with analog video-sources and automatically adds a dot to the channel number, as indicated in Slinger documentation for analogue tunners.
   - `remote_Digital.html` is an adaptation from `remotes.txt`, where the number buttons have been removed.<br />
 
-- If want to continue using your current remote controls, you may consider adding a reference to the JS folder and include a few HTML elements in their pages:
+- If you want to continue using your current remote controls, you may consider adding a reference to the JS folder and include a few HTML elements in their pages:
   - (Keep using your remote) Add reference to JS foler
 
 ```js
