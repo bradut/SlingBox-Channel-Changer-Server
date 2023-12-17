@@ -514,7 +514,7 @@ The file above stores a snapshot of the **`status of the wrapper server`** which
      The wrapper will automatically change this value to `null` if it is older than 100 seconds, based on the fact that, every 90 second, Slinger display on its console information about each of its slinboxess that are currently streaming.<br />
      The values of this setting can be either `null` or the date-time of the last event in the format `"2023-12-07T18:54:05"`.
 
-  - `tvGuideUrl`: This setting indicates that the TV Guide URL for a certain slingBox is **different** than the server-wide TV Guide URL (See the explanations about `config.ini`).<br /><be />
+  - `tvGuideUrl`: (optional) This setting indicates that the TV Guide URL for a certain slingBox is **different** than the server-wide TV Guide URL (See the explanations about `config.ini`).<br /><be />
     In the example above, the configuration of  **slingbox_1** which has a **digital** video-source:
       - uses the TV Guide with the URL `http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html` 
       - instead if the server-wide URL for analogue channels `http://192.168.1.10/TvGuideWebSite/TvGuide.html` defined at the bottom of the file for all other slingboxes.
