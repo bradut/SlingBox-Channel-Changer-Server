@@ -4,6 +4,10 @@ This is a **wrapper** around the [Slinger Server](https://github.com/GerryDazoo/
 
 In this sense, a **wrapper** app enhances or extends the capabilities of an existing application by providing additional features or functionalities.
 
+<p align="center">
+<img src="./Docs/images/SlingerWrapper_in_action.jpg" alt="Slinger Server Wrapper in action" height="500"><br />
+Slinger Wrapper in action
+</p>
 
 ## Table of Contents
 
