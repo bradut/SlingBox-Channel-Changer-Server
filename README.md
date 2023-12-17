@@ -193,7 +193,7 @@ VideoSmoothness=63
 VideoSource=1
 StartChannel=800   
 ;RemoteLock=yes
-tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html  ;<-- Using a different TV Guide 
+tvGuideUrl=http://192.168.1.10/TvGuideDigitalCanada/TvGuide.html  ;<-- When using a specific TV Guide 
 Remote=remote_Digital.html
 
 
@@ -222,7 +222,7 @@ FrameRate=25
 VideoBandwidth=2500
 VideoSmoothness=63
 VideoSource=0
-;StartChannel=0.                            <-- Cannot use with Analog Tuner
+;StartChannel=0.                            <-- Doesn't work with Analog Tuner
 Remote=remote_Analogue_ProHD.html
 
 
@@ -355,6 +355,15 @@ If you have multiple slingboxes, the wrapper will, by default, use this TV Guide
 Update it if it is different from the one in the example above.<br />
 Normally, this should be the same as the Slinger URL, except for the port number.<br />
 If you want to modify the port number, you will need to also update it in the Kestrel configuration section in this file file accordingly.
+
+**IMPORTANT**: When using the TV Guide from a different computer or a mobile device within your local network or on the Internet::
+
+1. Ensure the URLs above **do not** reference `localhost` (as this only works within your computer).
+2. Confirm that the URL in `SlingRemoteControlUrl` can be accessed from the URL in `TvGuideUrl`, and vice versa.
+
+This ensures bidirectional communication between your Wrapper and the TV Guide app.
+<br />
+<br />
 
 #### Update the AppSettings.RemoteControlIrCodes section (Remote Control IR Codes)
 
