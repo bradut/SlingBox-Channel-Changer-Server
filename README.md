@@ -100,7 +100,7 @@ These events are:<br />
 
 ## Installation
 
-The Sling Server Wrapper is provided as a single Windows-executable file named RunSlingServer.exe that can be downloaded from the [Releases]() page of this repo.<br />
+The Sling Server Wrapper is provided as a single Windows-executable file named RunSlingServer.exe that can be downloaded from this repo.<br />
 (Mac and Linux users could probably generate an OS-specific executable, but this has not been tested.)
 
 - It doesn't need to be installed,
@@ -108,7 +108,7 @@ The Sling Server Wrapper is provided as a single Windows-executable file named R
 
 To run the Sling Server Wrapper, download the following items **on the same folder where the Slinger Server is installed**:
 
-1. The Sling Server Wrapper executable file - from the [Releases]() page of this repo,
+1. The Sling Server Wrapper executable file - from the [Download](./Docs/Download/RunSlingServer.exe?raw=true) page of this repo,
 2. The `js` directory - from this repo,
 3. The `HTML` files for the remote controls - from this repo.
 
@@ -121,7 +121,7 @@ Notes: the `js` folder and the `HTMLS` remote control files are optional, but **
 
 Probably, in the future, accessing the server status will be delegated to querying the Wrapper instead of reading this file.
 
-Once the above files are downloaded, you can run the Sling Server Wrapper by double-clicking on the RunSlingServer.exe file.
+Once the above files are downloaded, you can run the Sling Server Wrapper by double-clicking on the RunSlingServer.exe file [Run as Administrator].
 
 At FIRST RUN, the wrapper will:
 
@@ -131,6 +131,13 @@ At FIRST RUN, the wrapper will:
  	- The list of slingboxes, with their names, types and VideoSources
   - Slinger's urlBase and port number
 - Generate the file **`SlingBoxStatus.json`** based on the actions above  
+<br />
+
+Afer the first run, your Slinger folder will look like this:
+<p align="center">
+<img src="./Docs/images/Slinger_and_Wrapper_Directory.jpg" alt="Slinger Wrapper Components" height="500"><br />
+Slinger Wrapper Components: JS, HTML files, RunSlingServer.exe, etc. 
+</p>
 <br />
 <br />
 
