@@ -18,8 +18,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: calc(100vh - 16px); /* Subtract top and bottom margins */
             min-width: 350px;
+        }
+
+        @media (min-height: 769px) {
+            body {
+                height: calc(100vh - 16px); /* Subtract top and bottom margins */
+            }
+        }
+
+        /* When displaying in Slinger for Mobile */
+        @media (max-height: 768px) {
+            body {
+                max-height: none;
+                overflow-y: auto;
+            }
         }
 
         h2 {
@@ -42,7 +55,7 @@
         }
 
         .emptyButton {
-            background-color: #d9d9d9;
+            background-color: transparent;
             color: #d9d9d9;
             padding: 10px 10px;
             text-align: center;
@@ -101,9 +114,12 @@
     <form id="mainForm" method="post" action="/Remote/sling_0">
 
         <!--DO NOT MODIFY THE ID-->
+        <h2 id="titleElem" class="title" style="color:darkmagenta;">
+            Sling_0
+        </h2>
 
         <div style="text-align: center;">
-        <!--
+            <!--
         <div>
             <button class="round" type="submit" name="1" value="9">1</button>
             <button class="round" type="submit" name="2" value="10">2</button>
