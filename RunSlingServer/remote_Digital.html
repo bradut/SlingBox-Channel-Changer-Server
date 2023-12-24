@@ -120,19 +120,19 @@
 
         <div style="text-align: center;">
             <!--
-        <div>
-            <button class="round" type="submit" name="1" value="9">1</button>
-            <button class="round" type="submit" name="2" value="10">2</button>
-            <button class="round" type="submit" name="3" value="11">3</button>
-            <button class="round" type="submit" name="4" value="12">4</button>
-            <button class="round" type="submit" name="5" value="13">5</button>
-            <button class="round" type="submit" name="6" value="14">6</button>
-            <button class="round" type="submit" name="7" value="15">7</button>
-            <button class="round" type="submit" name="8" value="16">8</button>
-            <button class="round" type="submit" name="9" value="17">9</button>
-            <button class="round" type="submit" name="0" value="18">0</button>
-        </div>
-        -->
+            <div>
+                <button class="round" type="submit" name="1" value="9">1</button>
+                <button class="round" type="submit" name="2" value="10">2</button>
+                <button class="round" type="submit" name="3" value="11">3</button>
+                <button class="round" type="submit" name="4" value="12">4</button>
+                <button class="round" type="submit" name="5" value="13">5</button>
+                <button class="round" type="submit" name="6" value="14">6</button>
+                <button class="round" type="submit" name="7" value="15">7</button>
+                <button class="round" type="submit" name="8" value="16">8</button>
+                <button class="round" type="submit" name="9" value="17">9</button>
+                <button class="round" type="submit" name="0" value="18">0</button>
+            </div>
+            -->
             <div>
                 <button class="button" type="submit" name="Up" value="38">&#9650;</button>
             </div>
@@ -207,6 +207,11 @@
     <script src="/js/slingerplayer.js"></script>
 
     <script>
+
+        // Prevent the default form submission so that the page doesn't "jump"" when clicked
+        document.getElementById("mainForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+        });
 
         main();
 
