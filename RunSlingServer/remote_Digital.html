@@ -27,7 +27,7 @@
             }
         }
 
-        /* When displaying in Slinger for Mobile */
+        /* Media query for screens narrower than 768px */
         @media (max-height: 768px) {
             body {
                 max-height: none;
@@ -93,14 +93,12 @@
         }
 
         .tvGuideButton {
-            /* font-family: Tahoma, monospace;*/
             font-size: 35px !important;
             color: white;
             text-decoration: none;
             font-style: normal;
             font-weight: 400;
             display: block;
-            /* width: 100%;*/
             text-align: center;
             background-color: #595959;
             padding: 10px 0;
@@ -108,80 +106,82 @@
             border-radius: 5px;
             margin-top: 20px;
         }
+
+        .ajax-button .submit-text-button {
+            content: ''; /*dummy property to make IDE happy*/
+        }
     </style>
 </head>
 <body>
     <form id="mainForm" method="post" action="/Remote/sling_0">
-
-        <!--DO NOT MODIFY THE ID-->
         <h2 id="titleElem" class="title" style="color:darkmagenta;">
-            Sling_0
+            Sling_000
         </h2>
-
         <div style="text-align: center;">
+            <!-- Uncomment below to use the buttons -->
             <!--
             <div>
-                <button class="round" type="submit" name="1" value="9">1</button>
-                <button class="round" type="submit" name="2" value="10">2</button>
-                <button class="round" type="submit" name="3" value="11">3</button>
-                <button class="round" type="submit" name="4" value="12">4</button>
-                <button class="round" type="submit" name="5" value="13">5</button>
-                <button class="round" type="submit" name="6" value="14">6</button>
-                <button class="round" type="submit" name="7" value="15">7</button>
-                <button class="round" type="submit" name="8" value="16">8</button>
-                <button class="round" type="submit" name="9" value="17">9</button>
-                <button class="round" type="submit" name="0" value="18">0</button>
+                <button class="round ajax-button" type="submit" name="1" value="9">1</button>
+                <button class="round ajax-button" type="submit" name="2" value="10">2</button>
+                <button class="round ajax-button" type="submit" name="3" value="11">3</button>
+                <button class="round ajax-button" type="submit" name="4" value="12">4</button>
+                <button class="round ajax-button" type="submit" name="5" value="13">5</button>
+                <button class="round ajax-button" type="submit" name="6" value="14">6</button>
+                <button class="round ajax-button" type="submit" name="7" value="15">7</button>
+                <button class="round ajax-button" type="submit" name="8" value="16">8</button>
+                <button class="round ajax-button" type="submit" name="9" value="17">9</button>
+                <button class="round ajax-button" type="submit" name="0" value="18">0</button>
             </div>
             -->
             <div>
-                <button class="button" type="submit" name="Up" value="38">&#9650;</button>
+                <button class="button ajax-button" type="submit" name="Up" value="38">&#9650;</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Left" value="40">&#9668;</button>
-                <button class="button" style="border-radius: 25%; color: cyan;" type="submit" name="OK" value="42">OK</button>
-                <button class="button" type="submit" name="Right" value="41">&#9658;</button>
+                <button class="button ajax-button" type="submit" name="Left" value="40">&#9668;</button>
+                <button class="button ajax-button" style="border-radius: 25%; color: cyan;" type="submit" name="OK" value="42">OK</button>
+                <button class="button ajax-button" type="submit" name="Right" value="41">&#9658;</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Down" value="39">&#9660;</button>
+                <button class="button ajax-button" type="submit" name="Down" value="39">&#9660;</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Exit" value="37">Exit</button>
-                <button class="button" type="submit" name="Last" value="56">Last</button>
-                <button class="button" type="submit" name="Guide" value="35">Guide</button>
+                <button class="button ajax-button" type="submit" name="Exit" value="37">Exit</button>
+                <button class="button ajax-button" type="submit" name="Last" value="56">Last</button>
+                <button class="button ajax-button" type="submit" name="Guide" value="35">Guide</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Pg+" value="44">Pg+</button>
-                <button class="button" type="submit" name="Menu" value="33">Menu</button>
-                <button class="button" type="submit" name="Ch+" value="4">Ch+</button>
+                <button class="button ajax-button" type="submit" name="Pg+" value="44">Pg+</button>
+                <button class="button ajax-button" type="submit" name="Menu" value="33">Menu</button>
+                <button class="button ajax-button" type="submit" name="Ch+" value="4">Ch+</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Pg-" value="43">Pg-</button>
+                <button class="button ajax-button" type="submit" name="Pg-" value="43">Pg-</button>
                 <span class="emptyButton"></span>
-                <button class="button" type="submit" name="Ch-" value="5">Ch-</button>
+                <button class="button ajax-button" type="submit" name="Ch-" value="5">Ch-</button>
             </div>
             <div>
                 <span class="emptyButton"></span>
             </div>
             <div>
-                <button class="button" style="color: red;" type="submit" name="Rec" value="29">Rec</button>
+                <button class="button ajax-button" style="color: red;" type="submit" name="Rec" value="29">Rec</button>
                 <span class="emptyButton"></span>
-                <button class="button" type="submit" name="DVR" value="23">DVR</button>
+                <button class="button ajax-button" type="submit" name="DVR" value="23">DVR</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Rew" value="27">&#9664;&#9664;</button>
-                <button class="button" type="submit" name="Play" value="24">Play</button>
-                <button class="button" type="submit" name="FF" value="28">&#9654;&#9654;</button>
+                <button class="button ajax-button" type="submit" name="Rew" value="27">&#9664;&#9664;</button>
+                <button class="button ajax-button" type="submit" name="Play" value="24">Play</button>
+                <button class="button ajax-button" type="submit" name="FF" value="28">&#9654;&#9654;</button>
             </div>
             <div>
-                <button class="button" type="submit" name="Day+" value="60">Day+</button>
-                <button class="button" type="submit" name="Pause" value="26">&#9612;&#9612;</button>
-                <button class="button" type="submit" name="OnDemand" value="34">OnDmd</button>
+                <button class="button ajax-button" type="submit" name="Day+" value="60">Day+</button>
+                <button class="button ajax-button" type="submit" name="Pause" value="26">&#9612;&#9612;</button>
+                <button class="button ajax-button" type="submit" name="OnDemand" value="34">OnDmd</button>
             </div>
 
             <div>
-                <button class="button" type="submit" name="Day-" value="59">Day-</button>
-                <button class="button" type="submit" name="Power" value="1">Power</button>
-                <button class="button" style="color: red;" type="submit" name="Restart" value="-1">Restart</button>
+                <button class="button ajax-button" type="submit" name="Day-" value="59">Day-</button>
+                <button class="button ajax-button" type="submit" name="Power" value="1">Power</button>
+                <button class="button ajax-button" style="color: red;" type="submit" name="Restart" value="-1">Restart</button>
             </div>
             <div>
                 <span class="emptyButton"></span>
@@ -195,8 +195,8 @@
                 </div>
             </div>
             <div>
-                <button class="button" type="submit" name="Channel" value="Channel">Channel</button>
-                <input class="text" type="text" name="Digits" maxlength="4" size="4" id="" value="">
+                <button class="button submit-text-button" type="submit" name="Channel" value="Channel">Channel</button>
+                <input class="text" type="text" name="Digits" maxlength="4" size="4" id="" value="" placeholder="" inputmode="numeric">
             </div>
             <div>
                 <a id="btnTvGuide" class="tvGuideButton button" href="#" target="GhidTV">TV Guide</a>
@@ -221,7 +221,17 @@
             setButtonHighlighting();
 
             setTextBoxHighlighting();
+
+            addAjaxButtonClickEventListener();
+
+            addAjaxChannelButtonClickEventListener();
+
+            addAjaxTextBoxKeydownEventListener();
+
+            SlingBoxStatus.isAnalogue = false;
         }
+
+
     </script>
 
 </body>

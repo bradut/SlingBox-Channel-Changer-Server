@@ -1,5 +1,6 @@
 /*********************************************
- * Ensure the channel number text contains a dot after it, given that this is an analogue channel
+ * Ensure the channel number text contains a dot,
+ * given this is an analogue channel
  ***********************************************/
 function setAnalogueChannelNumber() {
     const digitsInput = document.getElementsByName("Digits")[0];
@@ -16,6 +17,16 @@ function setAnalogueChannelNumber() {
 
     // The "return true" statement at the end of the function ensures that the form is submitted.
     return true;
+}
+
+class SlingBoxStatus {
+    static _isAnalogue = false;
+    static get isAnalogue() {
+        return this._isAnalogue;
+    }
+    static set isAnalogue(value) {
+        this._isAnalogue = value;
+    }
 }
 
 
@@ -113,39 +124,6 @@ class DataAccess {
                 return null;
             });
     }
-
-    // Load JSON text from server hosted file and return JSON parsed object
-    static getJsonString(filePath) {
-        const jsonString = DataAccess.loadDataFromWebApiSync(filePath, "application/json");
-
-        return JSON.parse(jsonString);
-    }
-
-    // Load text with Ajax synchronously: takes path to file and optional MIME type
-    static loadDataFromWebApiSync(filePath, mimeType) {
-        const xmlhttp = new XMLHttpRequest();
-        xmlhttp.withCredentials = false; //indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificate
-        //xmlhttp.timeout = 2000; // 2 seconds: only for async
-        const isAsync = false;
-
-        xmlhttp.open("GET", filePath, isAsync);
-
-        if (mimeType != null) {
-            if (xmlhttp.overrideMimeType) {
-                xmlhttp.overrideMimeType(mimeType);
-            }
-        }
-
-        xmlhttp.send();
-
-        if (xmlhttp.status === 200) {
-            return xmlhttp.responseText;
-        } else {
-            console.log("AJAX error =" + xmlhttp.statusText);
-
-            return null;
-        }
-    }
 }
 
 
@@ -214,7 +192,7 @@ function setTvGuideButtonQueryString(slingBoxStatus) {
     const slingRemoteControlUrl = slingBoxStatus.slingRemoteControlUrl;
     const encodedSlingRemoteControlUrl = encodeURIComponent(slingRemoteControlUrl);
 
-    
+
     displayDebugInfo(slingBoxStatus);
 
 
@@ -330,4 +308,149 @@ function highlightTextInput(input) {
     setTimeout(() => {
         input.style.backgroundColor = originalBackgroundColor;
     }, 1500);
+}
+
+
+function addAjaxButtonClickEventListener() {
+    const ajaxButtons = document.querySelectorAll(".ajax-button");
+    ajaxButtons.forEach(function (button) {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            const buttonValue = button.value;
+
+            sendButtonAjaxRequest(buttonValue);
+        });
+    });
+}
+
+function addAjaxChannelButtonClickEventListener() {
+    // Attach click event to the button submitting the text box
+    const submitTextButton = document.querySelector(".submit-text-button");
+    submitTextButton.addEventListener("click",
+        function (event) {
+            event.preventDefault();
+
+            // Special behavior for the button submitting the text box
+            const textBoxValue = document.querySelector(".text").value;
+
+            if (isNullOrUndefinedOrEmpty(textBoxValue)) {
+                return;
+            };
+
+            const parsedChannelNumber = parseChannelNumber(textBoxValue);
+
+            sendTextBoxAjaxRequest(parsedChannelNumber);
+
+            updateChannelPlaceholder(parsedChannelNumber);
+        });
+
+}
+
+
+function parseChannelNumber(channelNumber) {
+
+    if (isNullOrUndefinedOrEmpty(channelNumber)) {
+        return "";
+    }
+
+    // Remove non-digit and non-dot characters
+    channelNumber = channelNumber.replace(/[^\d.]/g, "");
+
+    if (!SlingBoxStatus.isAnalogue) {
+        // Ensure the digital channel number is 4 digits by prepending '0' if needed
+        if (channelNumber.length < 4) {
+            channelNumber = "0".repeat(4 - channelNumber.length) + channelNumber;
+        }
+    }
+    else {
+
+        if (!channelNumber.includes(".")) {
+            channelNumber += ".";
+        } else {
+            // Remove extra dots from analog channel number
+            channelNumber = channelNumber.replace(/\.(?=.*\.)/g, "");
+        }
+    }
+
+    return channelNumber;
+}
+
+function addAjaxTextBoxKeydownEventListener() {
+    const textBox = document.querySelector(".text");
+    textBox.addEventListener(
+        "keydown",
+        function (event) {
+            // Check if the pressed key is Enter (key code 13)
+            if (event.keyCode !== 13)
+                return;
+
+            event.preventDefault(); // Prevent the default form submission
+
+            const parsedChannelNumber = parseChannelNumber(textBox.value);
+
+            if (isNullOrUndefinedOrEmpty(parsedChannelNumber)) {
+                return;
+            };
+
+            sendTextBoxAjaxRequest(parsedChannelNumber);
+
+            updateChannelPlaceholder(parsedChannelNumber);
+        });
+}
+
+
+function updateChannelPlaceholder(parsedChannelNumber) {
+    const textBox = document.querySelector(".text");
+    textBox.placeholder = parsedChannelNumber;
+    textBox.value = "";
+
+    // Set a timeout to clear the placeholder
+    setTimeout(() => {
+        textBox.placeholder = "";
+    }, 15000);
+
+    // Blur the text input to hide the keyboard on mobile devices
+    textBox.blur();
+}
+
+
+function sendButtonAjaxRequest(buttonValue) {
+    const formData = new FormData();
+    formData.append("buttonValue", buttonValue);
+
+    fetch(window.location.pathname, {
+        method: "POST",
+        body: formData
+    })
+        .then(response => response.text())
+        .then(() => {
+            // Clear the placeholder
+            const textBox = document.querySelector(".text");
+            textBox.placeholder = "";
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
+
+function sendTextBoxAjaxRequest(digitsValue) {
+    const requestData = new URLSearchParams();
+    requestData.append("Channel", "Channel");
+    requestData.append("Digits", digitsValue);
+
+    fetch(window.location.pathname, {
+        method: "POST",
+        body: requestData.toString(),
+        headers: {
+            'Content-Type': "application/x-www-form-urlencoded"
+        }
+    })
+        .then(response => response.text())
+        //.then(data => {
+        //    console.log('Server response length:', data.length);
+        //})
+        .catch(error => {
+            console.error("Error:", error);
+        });
 }

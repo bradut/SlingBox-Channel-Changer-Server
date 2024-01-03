@@ -89,6 +89,10 @@
             margin-bottom: 5px;
             /*padding-bottom: 10px;*/
         }
+
+        .ajax-button .submit-text-button {
+            content: ''; /*dummy property to make IDE happy*/
+        }
     </style>
 
 </head>
@@ -97,21 +101,23 @@
 
     <form id="mainForm" method="post" onsubmit="return setAnalogueChannelNumber()">
 
-     <!--DO NOT MODIFY THE ID-->
-    <h2 id="titleElem" class="title" style="color:blue;">
-        Sling_1
-    </h2>
+        <!--DO NOT MODIFY THE ID-->
+        <h2 id="titleElem" class="title" style="color:blue;">
+            Sling_1
+        </h2>
 
-    <div id="slingStatus" style="color:Transparent; font-size:1px">
-        <!--DO NOT REMOVE: MAGIC string replaced by Slinger with server status.-->
-        <label>Status:</label>Status:%s
+        <div id="slingStatus" style="color:Transparent; font-size:1px">
+            <!--DO NOT REMOVE: MAGIC string replaced by Slinger with server status.-->
+            <label>Status:</label>Status:%s
         </div>
 
-        <button class="button" type="submit" name="Ch+" value="0.0">Ch+</button>&nbsp;&nbsp;
-        <button class="button" type="submit" name="Ch-" value="1.0">Ch-</button>&nbsp;&nbsp;
-        <button class="button" type="submit" name="Last" value="3.0">Last</button><br><br>
-        <button class="button" type="submit" name="Channel" value="Channel">Channel</button>
-        <input class="text" type="text" name="Digits" maxlength="4" size="4" id="" value="" />
+        <button class="button ajax-button" type="submit" name="Ch+" value="0.0">Ch+</button>&nbsp;&nbsp;
+        <button class="button ajax-button" type="submit" name="Ch-" value="1.0">Ch-</button>&nbsp;&nbsp;
+        <button class="button ajax-button" type="submit" name="Last" value="3.0">Last</button><br><br>
+
+        <button class="button submit-text-button" type="submit" name="Channel" value="Channel">Channel</button>
+
+        <input class="text" type="text" name="Digits" maxlength="4" size="4" id="" value="" placeholder="" inputmode="numeric" />
         <br>
 
         <!--DO NOT REMOVE: Uncomment to display Debug Info-->
@@ -141,6 +147,14 @@
             setButtonHighlighting();
 
             setTextBoxHighlighting();
+
+            addAjaxButtonClickEventListener();
+
+            addAjaxChannelButtonClickEventListener();
+
+            addAjaxTextBoxKeydownEventListener();
+
+            SlingBoxStatus.isAnalogue = true;
         }
     </script>
 

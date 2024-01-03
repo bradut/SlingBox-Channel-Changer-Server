@@ -201,12 +201,6 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
                     return true;
                 }
 
-                if (postResponse.Contains("Error"))
-                {
-                    responseStatusCode = StatusCodes.Status500InternalServerError;
-                    return true;
-                }
-
                 responseStatusCode = StatusCodes.Status200OK;
                 return false;
             }

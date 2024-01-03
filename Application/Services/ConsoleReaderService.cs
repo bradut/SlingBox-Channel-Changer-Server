@@ -231,6 +231,7 @@ namespace Application.Services
                 if (!string.IsNullOrWhiteSpace(channelStr))
                 {
                     // analogue channels contain ".", but removing it may not be OK when "." is inside the channel number
+                    // ToDo: allow "." in channel number
                     channelStr = channelStr.Replace(".", "");
                 }
                 else
@@ -274,7 +275,10 @@ namespace Application.Services
 
             if (line.StartsWith("IR [b") && !_previousLine.Contains("Got Streamer Control Message IR"))
             {
-                _console.WriteLine($"***************************\nPrevious line does not contain 'Got Streamer Control Message IR\"' \n It is {_previousLine}\n***************************");
+                _console.WriteLine($"***************************\n" +
+                                   $"Previous line does not contain 'Got Streamer Control Message IR\"' \n" +
+                                   $" It is {_previousLine}\n" +
+                                   $"***************************");
             }
 
             // The following 2 lines are always sent in sequence, but NOT ALWAYS consecutively:
@@ -334,8 +338,13 @@ namespace Application.Services
                 return (true, ServerAction.StreamingStopped, slingBoxName);
             }
 
+            // slingBox2 Unknown Error Starting Session.Cant Continue.
+            // slingBox2 ERROR: Slingbox session startup failed.
             // slingBox2 Error Starting Session. Slingbox might be Bricked
-            if (line.Contains("Error Starting Session. Slingbox might be Bricked"))
+            if (line.Contains("Unknown Error Starting Session.Cant Continue.") ||
+                line.Contains("ERROR: Slingbox session startup failed.") ||
+                line.Contains("Error Starting Session. Slingbox might be Bricked") 
+                )
             {
                 var slingBoxName = GetSlingboxNameFromLogWhenFirstInLine(line);
 
@@ -685,18 +694,16 @@ namespace Application.Services
 
             return slingBoxName;
         }
-
-
+        
         private void UpdateSlingBoxChannelDigital(string slingBoxName, int channelNumber, string line)
         {
             var commandType = DigitalRemoteControlCommandType.ChangeChannel;
 
             UpdateSlingBoxChannelDigital(slingBoxName, channelNumber, commandType, line);
         }
-
+        
         private void UpdateSlingBoxChannelDigital(string slingBoxName, int channelNumber, int commandType, string line)
         {
-
             var remoteControlHandler = new DigitalRemoteControlHandler
             {
                 SlingBoxName = slingBoxName,

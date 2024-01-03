@@ -50,10 +50,14 @@ namespace RunSlingServer.WebApi.Services
             foreach (var keyVal in pairs)
             {
                 var kv = keyVal.Split('=');
-                if (kv.Length == 2)
-                {
-                    keyValuePairs.Add(kv[0], kv[1]);
-                }
+                if (kv.Length != 2)
+                    continue;
+
+                // Ignore custom, non-Slinger parameters, such as "_SlingBoxName"
+                if (kv[0].StartsWith("_"))
+                    continue;
+                
+                keyValuePairs.Add(kv[0], kv[1]);
             }
 
             return keyValuePairs;

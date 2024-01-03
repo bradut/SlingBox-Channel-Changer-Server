@@ -209,12 +209,19 @@ namespace RunSlingServer.WebApi.Services
 
 
 
-                endpoints.MapPost("/api/post-to-url",
-                    async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
-                {
-                    return await postToUrlHandler.HandlePostToUrl(request);
-                });
+                endpoints.MapGet("/api/v1/streamingstatus", [OutputCache(PolicyName = "Expire1.5")]
+                async Task<string> (HttpContext context, IGetStreamingStatusHandler streamingStatusService) =>
+                    {
+                        return await streamingStatusService.GetStreamingStatus(context);
+                    });
 
+
+
+                endpoints.MapPost("/api/v1/post-to-url",
+                    async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
+                    {
+                        return await postToUrlHandler.HandlePostToUrl(request);
+                    });
 
 
                 // SignalR endpoint

@@ -94,6 +94,6 @@ static void DisplayAppVersion(string appVersion)
 {
     Console.WriteLine("\n");
     Console.WriteLine("███████████████████████████████████████████████████████████████████████████████");
-    Console.WriteLine($"██                   {appName} Version {appVersion}                            ██ ");
+    Console.WriteLine($"██                  {appName}  -  Version {appVersion}                    ██ ");
     Console.WriteLine("███████████████████████████████████████████████████████████████████████████████\n\n");
 }
