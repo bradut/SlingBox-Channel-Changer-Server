@@ -209,7 +209,7 @@ namespace RunSlingServer.WebApi.Services
 
 
 
-                endpoints.MapGet("/api/v1/streamingstatus", [OutputCache(PolicyName = "Expire1.5")]
+                endpoints.MapGet(Helpers.Constants.StreamingStatusUri, [OutputCache(PolicyName = "Expire1.5")]
                 async Task<string> (HttpContext context, IGetStreamingStatusHandler streamingStatusService) =>
                     {
                         return await streamingStatusService.GetStreamingStatus(context);
@@ -224,7 +224,7 @@ namespace RunSlingServer.WebApi.Services
                     });
 
 
-                endpoints.MapPost("/api/v1/post-to-url",
+                endpoints.MapPost(Helpers.Constants.TvChannelUri, //"/api/v1/post-to-url"
                     async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
                     {
                         return await postToUrlHandler.HandlePostToUrl(request);

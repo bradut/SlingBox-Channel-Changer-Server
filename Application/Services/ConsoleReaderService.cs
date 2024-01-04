@@ -33,7 +33,8 @@ namespace Application.Services
         {
             get
             {
-                return _slingBoxServerStatus ??= _fileService?.LoadSlingBoxServerStatusFromFile() ?? new SlingBoxServerStatus();
+                return _slingBoxServerStatus ??= _fileService?.LoadSlingBoxServerStatusFromFile() 
+                                                 ?? new SlingBoxServerStatus();
             }
 
             set => _slingBoxServerStatus = value;

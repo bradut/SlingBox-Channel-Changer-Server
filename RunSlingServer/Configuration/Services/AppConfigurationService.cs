@@ -135,7 +135,7 @@ namespace RunSlingServer.Configuration.Services
             SetSlingerConfigFileNameAsParameter(appSettings);
 
             appSettings.AppSettings.TvGuide.TvGuideUrl = "http://localhost:80/TvGuideWebSite/TvGuide.html";
-            appSettings.AppSettings.TvGuide.SlingRemoteControlUrl = "http://localhost:5196/api/v1/post-to-url";
+            appSettings.AppSettings.TvGuide.SlingRemoteControlUrl = $"http://localhost:5196{Helpers.Constants.TvChannelUri}"; // /api/v1/post-to-uri
         }
 
 
