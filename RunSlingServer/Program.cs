@@ -48,8 +48,7 @@ static async Task Run(string[] args)
         var result = SyncAppStatus.SynchronizeAppStatus(fileSystemAccess, slingerConfigParser, appConfiguration);
         if (!result.IsSuccess)
         {
-            var errMsg = string.Join(",", result.ErrorMessages);
-            DisplayMessage(errMsg);
+            DisplayMessage(string.Join(",", result.ErrorMessages));
             return;
         }
 
@@ -73,6 +72,8 @@ static void DisplayErrorAnotherInstanceIsRunning(string msg)
 
     DisplayMessage(errMsg);
 }
+
+
 
 static void DisplayMessage(string message)
 {

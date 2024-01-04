@@ -200,7 +200,7 @@ namespace RunSlingServer.WebApi.Services
             app.UseEndpoints(endpoints =>
             {
 
-                // API endpoints
+                //Deprecated: 2024-01-02
                 endpoints.MapGet("/api/streamingstatus", [OutputCache(PolicyName = "Expire1.5")]
                 async Task<string> (HttpContext context, IGetStreamingStatusHandler streamingStatusService) =>
                 {
@@ -215,6 +215,13 @@ namespace RunSlingServer.WebApi.Services
                         return await streamingStatusService.GetStreamingStatus(context);
                     });
 
+
+                //Deprecated: 2024-01-02
+                endpoints.MapPost("/api/post-to-url",
+                    async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
+                    {
+                        return await postToUrlHandler.HandlePostToUrl(request);
+                    });
 
 
                 endpoints.MapPost("/api/v1/post-to-url",

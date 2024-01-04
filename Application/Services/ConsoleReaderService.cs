@@ -28,7 +28,16 @@ namespace Application.Services
             public const string ErrorRemoteLocked = "RemoteControlLocked";
         }
 
-        public SlingBoxServerStatus ServerStatus { get; }
+        private SlingBoxServerStatus? _slingBoxServerStatus;
+        public SlingBoxServerStatus ServerStatus
+        {
+            get
+            {
+                return _slingBoxServerStatus ??= _fileService?.LoadSlingBoxServerStatusFromFile() ?? new SlingBoxServerStatus();
+            }
+
+            set => _slingBoxServerStatus = value;
+        } 
 
         private readonly ConsoleDisplayDispatcher _console;
         private readonly ISignalRNotifier? _signalRNotifier;
@@ -50,13 +59,12 @@ namespace Application.Services
             _memoryCache = memoryCache ?? new MemoryCache(new MemoryCacheOptions());
             _signalRNotifier = signalRNotifier;
             _logger = logger;
-            ServerStatus = _fileService?.LoadSlingBoxServerStatusFromFile() ?? new SlingBoxServerStatus();
         }
 
 
         public async Task ParseLogLineAsync(string line)
         {
-            var (isParsed, actionType, slingBoxName) = ParseConsoleLog(line);
+           var (isParsed, actionType, slingBoxName) = ParseConsoleLog(line);
 
             await DisplayConsoleLineAsync(line, isParsed);
 
