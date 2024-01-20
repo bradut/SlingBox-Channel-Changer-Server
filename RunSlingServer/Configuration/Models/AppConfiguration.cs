@@ -62,7 +62,10 @@ namespace RunSlingServer.Configuration.Models
     [JsonSerializable(typeof(AppSettings))]
     public class AppSettings
     {
-        private const string AppVersion = "2024.01.03"; //"1.0.0";
+        private const string AppVersion = "2024.01.19"; 
+        // "2024.01.03";
+        // //"1.0.0";
+
         public string Version { get; set; } = AppVersion;
 
         public SlingboxServerSettings SlingboxServer { get; set; } = new();

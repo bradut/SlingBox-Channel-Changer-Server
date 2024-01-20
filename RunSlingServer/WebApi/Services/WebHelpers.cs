@@ -1,5 +1,6 @@
-﻿using System.Text;
-using System.Web;
+﻿using Microsoft.Extensions.Primitives;
+using System.Net;
+using System.Text;
 
 namespace RunSlingServer.WebApi.Services
 {
@@ -56,7 +57,7 @@ namespace RunSlingServer.WebApi.Services
                 // Ignore custom, non-Slinger parameters, such as "_SlingBoxName"
                 if (kv[0].StartsWith("_"))
                     continue;
-                
+
                 keyValuePairs.Add(kv[0], kv[1]);
             }
 
@@ -122,30 +123,37 @@ namespace RunSlingServer.WebApi.Services
             return clientIp;
         }
 
+
         public static (Uri? uri, bool isValidUrl, string errorMessage) ValidateUrl(HttpRequest request)
         {
             string errMsg;
             const string exampleUrl = "http://domain.com/Remote/sbName";
 
-            var url = request.Query["url"];
+            StringValues url = request.Query["url"];
 
             if (string.IsNullOrWhiteSpace(request.Query["url"]))
             {
                 errMsg = "Parameter 'url' must be passed in the query string";
                 return (null, false, errMsg);
             }
+            url = WebUtility.UrlDecode(url); //url = HttpUtility.UrlDecode(url);
 
-            url = HttpUtility.UrlDecode(url);
 
-#pragma warning disable CS8604 // Possible null reference argument.
+            if (StringValues.IsNullOrEmpty(url))
+            {
+                errMsg = $"Parameter 'url' {url} could not be decoded into an URL";
+                return (null, false, errMsg);
+            }
+            
             if (!IsValidUri(url))
             {
                 errMsg = $"Parameter 'url' must be a valid URL, eg: {exampleUrl}";
                 return (null, false, errMsg);
             }
 
+            #pragma warning disable CS8604 // Possible null reference argument.
             var uriAddress = new Uri(url);
-#pragma warning restore CS8604 // Possible null reference argument.
+            //pragma warning restore CS8604 // Possible null reference argument.
 
 
             if (!uriAddress.IsAbsoluteUri)
@@ -164,7 +172,7 @@ namespace RunSlingServer.WebApi.Services
             return (uriAddress, true, "");
         }
 
-        public static bool IsValidUri(string url)
+        public static bool IsValidUri(string? url)
         {
             return Uri.TryCreate(url, UriKind.Absolute, out Uri? result)
                    && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
