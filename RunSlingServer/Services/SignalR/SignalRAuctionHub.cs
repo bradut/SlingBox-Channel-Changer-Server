@@ -1,9 +1,11 @@
 ﻿using Application.SignalRServices;
 using Application.SignalRServices.Notifications;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.SignalR;
 
 namespace RunSlingServer.Services.SignalR
 {
+    [OutputCache(NoStore = true, Duration = 0)]
     public class SignalRAuctionHub : Hub, ISignalRAuctionHub
     {
         public async Task NotifyNewChannel(ChannelChangedNotification notification)

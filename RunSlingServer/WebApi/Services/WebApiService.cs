@@ -242,6 +242,7 @@ namespace RunSlingServer.WebApi.Services
 
 
                 // SignalR endpoint
+                //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
                 endpoints.MapHub<SignalRAuctionHub>("/auctionhub");
 
 
