@@ -13,6 +13,8 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
 
         private readonly ILogger _logger;
 
+        public const string SlingBoxNameParameterName = "slingBoxName";
+
         public GetStreamingStatusHandler(IFileSystemAccess fileSystemAccess, ILogger logger)
         {
             _fileSystemAccess = fileSystemAccess;
@@ -22,11 +24,10 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
 
         public async Task<string> GetStreamingStatus(HttpContext context)
         {
-            const string slingBoxNameParameterName = "slingBoxName";
 
-            if (!context.Request.Query.ContainsKey(slingBoxNameParameterName))
+            if (!context.Request.Query.ContainsKey(SlingBoxNameParameterName))
             {
-                const string errorMessage = $"WebApi Get: Missing '{slingBoxNameParameterName}' parameter";
+                const string errorMessage = $"WebApi Get: Missing '{SlingBoxNameParameterName}' parameter";
                 await HandleError(errorMessage);
 
                 return string.Empty;
@@ -41,7 +42,7 @@ namespace RunSlingServer.WebApi.Services.EndpointsServices
                 return string.Empty;
             }
 
-            var slingBoxesNames = context.Request.Query[slingBoxNameParameterName];
+            var slingBoxesNames = context.Request.Query[SlingBoxNameParameterName];
             var serializedBoxesStatusToJson = GetSlingBoxesStatusAsJson(serverStatus, slingBoxesNames);
             var ip = WebHelpers.GetClientIp(context.Request);
 
