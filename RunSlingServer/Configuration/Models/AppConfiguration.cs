@@ -62,7 +62,8 @@ namespace RunSlingServer.Configuration.Models
     [JsonSerializable(typeof(AppSettings))]
     public class AppSettings
     {
-        private const string AppVersion = "2024.01.19"; 
+        private const string AppVersion = "2024.02.02"; // output cache
+        // "2024.01.19"; // fix assembly not found exception
         // "2024.01.03";
         // //"1.0.0";
 
