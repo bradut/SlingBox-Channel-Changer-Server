@@ -144,9 +144,18 @@ namespace RunSlingServer.WebApi.Services
 
             services.AddOutputCache(options =>
             {
-                options.AddBasePolicy(policy => policy.Expire(TimeSpan.FromSeconds(1)));
-                options.AddPolicy("Expire1.5", builder =>
-                    builder.Expire(TimeSpan.FromSeconds(1.5)));
+                options.AddBasePolicy(policy => policy
+                    .Expire(TimeSpan.FromSeconds(1))
+                    .SetVaryByQuery(GetStreamingStatusHandler.SlingBoxNameParameterName));
+
+                options.AddPolicy("Expire1.5", builder => builder
+                    .Expire(TimeSpan.FromSeconds(1.5))
+                    .SetVaryByQuery(GetStreamingStatusHandler.SlingBoxNameParameterName));
+
+                options.AddPolicy("Expire20", builder => builder
+                    .Expire(TimeSpan.FromSeconds(20))
+                    .SetVaryByQuery(GetStreamingStatusHandler.SlingBoxNameParameterName));
+
             });
 
 
@@ -187,6 +196,7 @@ namespace RunSlingServer.WebApi.Services
                 logger.LogInformation($"Response {context.Response.StatusCode} returned for {context.Request.Path.Value}.");
             });
 
+            app.UseOutputCache();
 
             MapEndpoints(app);
         }
