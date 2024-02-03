@@ -162,11 +162,14 @@ namespace RunSlingServer.Services.SignalR
             {
                 var displayErrMsg = $"SignalR: Error creating connection to '{HubEndpoint}'.\n\n" +
 
-                                    "This server will not be able to communicate with with the channel-changer TV Guide.\n\n" +
+                                    "This server is not able to communicate with the channel-changer TV Guide.\n\n" +
 
                                     "Please check if the endpoint above belongs to THIS server, if port forwarding to your server is correct, etc.\n\n" +
 
+                                    "This issue may be caused by a misconfigured server, or a (temporary) network issue.\n\n" +
+
                                     $"Error message: {ex.Message}";
+
                 return displayErrMsg;
             }
         }
