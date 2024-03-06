@@ -1,12 +1,9 @@
 ﻿using Application.SignalRServices;
 using Application.SignalRServices.Notifications;
-using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.SignalR;
 
 namespace RunSlingServer.Services.SignalR
 {
-    // SignalR hubs are essentially controllers, and the output cache needs to be disabled for them to function. 
-    [OutputCache(NoStore = true, Duration = 0)]
     public class SignalRAuctionHub : Hub, ISignalRAuctionHub
     {
         public async Task NotifyNewChannel(ChannelChangedNotification notification)

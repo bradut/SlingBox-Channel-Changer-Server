@@ -142,23 +142,6 @@ namespace RunSlingServer.WebApi.Services
                 return new GetStreamingStatusHandler(_fileSystemAccess, _logger);
             });
 
-            services.AddOutputCache(options =>
-            {
-                options.AddBasePolicy(policy => policy
-                    .Expire(TimeSpan.FromSeconds(1))
-                    .SetVaryByQuery(GetStreamingStatusHandler.SlingBoxNameParameterName));
-
-                options.AddPolicy("Expire1.5", builder => builder
-                    .Expire(TimeSpan.FromSeconds(1.5))
-                    .SetVaryByQuery(GetStreamingStatusHandler.SlingBoxNameParameterName));
-
-                options.AddPolicy("Expire20", builder => builder
-                    .Expire(TimeSpan.FromSeconds(20))
-                    .SetVaryByQuery(GetStreamingStatusHandler.SlingBoxNameParameterName));
-
-            });
-
-
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSignalR",
@@ -196,7 +179,6 @@ namespace RunSlingServer.WebApi.Services
                 logger.LogInformation($"Response {context.Response.StatusCode} returned for {context.Request.Path.Value}.");
             });
 
-            app.UseOutputCache();
 
             MapEndpoints(app);
         }
@@ -211,19 +193,19 @@ namespace RunSlingServer.WebApi.Services
             {
 
                 //Deprecated: 2024-01-02
-                endpoints.MapGet("/api/streamingstatus", [OutputCache(PolicyName = "Expire1.5")]
+                endpoints.MapGet("/api/streamingstatus",
                 async Task<string> (HttpContext context, IGetStreamingStatusHandler streamingStatusService) =>
                 {
                     return await streamingStatusService.GetStreamingStatus(context);
                 });
 
 
-
                 endpoints.MapGet(Helpers.Constants.StreamingStatusUri, [OutputCache(PolicyName = "Expire1.5")]
+
                 async Task<string> (HttpContext context, IGetStreamingStatusHandler streamingStatusService) =>
-                    {
-                        return await streamingStatusService.GetStreamingStatus(context);
-                    });
+                        {
+                            return await streamingStatusService.GetStreamingStatus(context);
+                        });
 
 
                 //Deprecated: 2024-01-02
@@ -234,15 +216,13 @@ namespace RunSlingServer.WebApi.Services
                     });
 
 
-                endpoints.MapPost(Helpers.Constants.TvChannelUri, //"/api/v1/post-to-url"
+                endpoints.MapPost(Helpers.Constants.TvChannelUri, // "/api/v1/tv-channel";
                     async Task<string> (HttpRequest request, IPostToUrlHandler postToUrlHandler) =>
                     {
                         return await postToUrlHandler.HandlePostToUrl(request);
                     });
 
 
-                // SignalR endpoint
-                //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
                 endpoints.MapHub<SignalRAuctionHub>("/auctionhub");
 
 
