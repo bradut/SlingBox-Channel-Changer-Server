@@ -945,7 +945,12 @@ namespace Application.Services
 
         private async Task NotifyStreamingStoppedAsync(string slingBoxName)
         {
-            if (_signalRNotifier == null) return;
+            if (_signalRNotifier == null)
+            {
+                _logger?.LogError("Error: Cannot send notifications, SignalRNotifier is null! ");
+                return;
+            }
+
             await DisplayMessageAsync("Wrapper: NotifyStreamingStoppedAsync");
 
             var notification = new StreamingStoppedNotification(slingBoxName, "server");
@@ -954,7 +959,12 @@ namespace Application.Services
 
         private async Task NotifyStreamingInProgressAsync(string slingBoxName)
         {
-            if (_signalRNotifier == null) return;
+            if (_signalRNotifier == null)
+            {
+                _logger?.LogError("Error: Cannot send notifications, SignalRNotifier is null!");
+                await DisplayMessageAsync("Error: Cannot send notifications, SignalRNotifier is null!");
+                return;
+            }
 
             var notification = new StreamingInProgressNotification(slingBoxName, "server");
             await _signalRNotifier.NotifyClients(notification);
